@@ -78,26 +78,26 @@
       <div class="col-2" id="rad-logo">
         <img class='img-fluid' id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">
       </div>
-      <div class="col-2">
+      <div class="col-2" style="visibility: hidden;">
         <button class="menu_element_unselected" onclick="menuSelection('manager')" id="manager_button">
           <h5>Library</h5>
 
         </button>
 
       </div>
-      <div class="col-2">
+      <div class="col-2" style="">
         <button class="menu_element_unselected" onclick="menuSelection('builder')" id="builder_button">
           <h5>Model Builder</h5>
         </button>
       </div>
       <div class="col-2">
-        <button class="menu_element_unselected" onclick="menuSelection('collection_builder')"
+        <button class="menu_element_unselected"style="visibility: hidden;" onclick="menuSelection('collection_builder')"
           id="collection_builder_button">
           <h5>System Builder</h5>
         </button>
       </div>
       <div class="col-2">
-        <button class="menu_element_unselected" onclick="menuSelection('interpreter')" id="interpreter_button">
+        <button class="menu_element_unselected"style="visibility: hidden;" onclick="menuSelection('interpreter')" id="interpreter_button">
           <h5>Simulation</h5>
         </button>
 
@@ -131,7 +131,7 @@
       <div class="d-flex shadow-none flex-row mb-3 align-self-start">
         <div class="p-2" style="background-color:transparent !important;">
 
-          <div class="row">
+          <div class="row" style="visibility: hidden;">
             <div class="col-12">
               <h6>Select your level of expertise below </h6>
             </div>
@@ -150,13 +150,13 @@
         </div>
 
         <div class="p-2 bd-highlight">
-          <button class="shadow-sm btn generic_button" onclick='$("#builder_element_selection_modal").modal("show");'>
+          <button class="shadow-sm btn generic_button" style="visibility: hidden;" onclick='$("#builder_element_selection_modal").modal("show");'>
             Change model
           </button>
         </div>
 
 
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight"style="visibility: hidden;">
           <button class="btn btn-outline-secondary" onclick="openNav('profile_builder')">Edit algorithm<img
               class="img-fluid" src="./res/leaf.svg" style="max-width: 30px !important;"></button>
         </div>
@@ -170,7 +170,7 @@
 
         <div class="p-2" style="background-color:transparent !important;">
 
-          <div class="row">
+          <div class="row"style="visibility: hidden;">
             <div class="col-12">
               <h6>Select a consumption guide </h6>
             </div>
