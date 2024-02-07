@@ -3383,7 +3383,7 @@ function addToCollectionsView() {
     populateParameterPool(parameter_pool);
 }
 
-function clear_inheritance_tree() {
+function clear_inheritance_tree() {/*
     for (let x in inheritance_tree_branches) {
         document.getElementById(inheritance_tree_branches[x]).innerHTML = '';
     }
@@ -3391,7 +3391,7 @@ function clear_inheritance_tree() {
     for (let x in this.tree_lines) {
         this.tree_lines[x].remove();
     }
-    this.tree_lines = []
+    this.tree_lines = []*/
 }
 
 
