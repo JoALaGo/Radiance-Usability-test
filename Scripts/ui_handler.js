@@ -463,7 +463,7 @@ function loadSample() {
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You will find advice according to your model'+"'"+'s characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your model.',
+                text: 'You will find advice according to your model'+"'"+'s characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
