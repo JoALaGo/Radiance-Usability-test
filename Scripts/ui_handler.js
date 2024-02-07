@@ -449,7 +449,7 @@ function loadSample() {
             },
             {
                 highlight: '#run_algorithm_button',
-                text: 'Once your model is ready you can rate its elements using this button. Keep in mind this: all the properties of the models and its functions should have a valid value, and the functions a valid trigger.',
+                text: 'Once your model is ready you can rate its elements using this button. Keep in mind this: all the properties of the model and its functions should have a valid value, and the functions a valid trigger.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
