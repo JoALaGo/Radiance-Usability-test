@@ -296,7 +296,7 @@ function loadSample() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'Some sub-categories are displayed inside, as well as several options. Each one represents a characteristic of the behavior of the software you are modeling, and each one affects how your model is rated.',
+                text: 'Some sub-categories are displayed inside, as well as several properties. Each property represents a characteristic of the behavior of the software you are modeling, and each one affects how your model is rated according to several energy-consumption guidelines.',
                 position: 'left',
                 callback: {
                     fn: () => {
