@@ -351,7 +351,7 @@ function loadSample() {
 
                 highlight: "#_19_parent_header",
 
-                text: 'Creating parameters and editing them works the same as functions/methods.',
+                text: 'Creating parameters and editing them works the same as functions/methods. Parameters are important to define messages among functions later in the design process. Always keep in mind what data your functions receive and send among them.',
                 position: 'right',
                 callback: {
 
@@ -412,7 +412,7 @@ function loadSample() {
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'Triggering a function (A) with a parameter requires an exchange of a parameter with another function (B): Function B -parameter-> Function A. These relationships are created in the "Messages section".',
+                text: 'Triggering a function (A) with a parameter requires an exchange of a parameter with another function (B): Function B -parameter-> Function A. These relationships are created in the "Messages section" usign the parameters that you created before.',
                 position: "right",
 
                 callback: {
