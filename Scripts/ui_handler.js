@@ -48,7 +48,7 @@ var builder_algorithm_editor;
 var collection_builder_algorithm_editor;
 var builder_ui_lines = [];
 var popups_manager;
-
+var tutorial_step = 0;
 class externalTrigger {
     constructor(parent_collection, parent_profile, target_profile, target_operation, trigger_type, trigger_value, source_operation) {
         this.element_id = createUID()
@@ -245,11 +245,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
    setInterval(function () {
         // call your function here
         if (document.getElementsByClassName('tutorial-box')[0] == null) {
-            alert('Out of bounds');
+        document.getElementById('tutorial_row_tools').style.visibility='';
+        }else{
+            document.getElementById('tutorial_row_tools').style.visibility='hidden';
         }
     }, 2000);
 
 });
+
+
 
 function loadSample() {
     let project = atob(tutorial_64);
@@ -276,6 +280,16 @@ function loadSample() {
 
     var mytutorial = new Tutorial("usability_test", {
         steps: [
+            {
+
+                highlight: "#radiance_logo_top",
+
+                text: 'Before we continue: remember that you can skip to any step you want using the progress bar below.',
+                position: 'bottom',
+                callback: {
+                 
+                }
+            },
             {
                 highlight: "#currently_selected_profile",
 
@@ -398,7 +412,7 @@ function loadSample() {
                 position: 'right',
                 callback: {
                     fn: () => {
-                        setTimeout(() => { document.getElementsByClassName('tutorial-close')[0].scrollIntoView({ behavior: "smooth" }); }, 1000);
+                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
                     }
                 }
             },
@@ -412,7 +426,7 @@ function loadSample() {
                     fn: () => {
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        setTimeout(() => { document.getElementsByClassName('tutorial-close')[0].scrollIntoView({ behavior: "smooth" }); }, 1000);
+                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
                     }
                 }
             },
@@ -427,7 +441,7 @@ function loadSample() {
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.remove('attention');
                         document.getElementById('triggers_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('triggers_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        setTimeout(() => { document.getElementsByClassName('tutorial-close')[0].scrollIntoView({ behavior: "smooth" }); }, 1000);
+                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
                     }
                 }
             },
@@ -518,6 +532,21 @@ function loadSample() {
 
 
 
+}
+
+function rerunTutorial(){
+    alertify.confirm('Warning', 'All your progress will be lost. If you wish to see the complete tutorial or a part of it again without losing progress, open the same URL in an incognito tab. Otherwise, you can click on "OK". <br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can'+"'"+'t I just reload the tutorial? <br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
+        loadSample();
+        mytutorial.start();
+    }
+        , function () {  })
+}
+
+function viewVideogameSample(){
+    alertify.confirm('Warning', 'To view the Video Game sample: <ol><li>Open the same URL in a private (incognito) tab.</li><li>Navigate to step 10 of the tutorial and click on "Next"</li><li>Cancel the tutorial.</li></ol><br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can'+"'"+'t I view the sample here?<br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
+        
+    }
+        , function () {  })
 }
 
 function restartTooltips() {

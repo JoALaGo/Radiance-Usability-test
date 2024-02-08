@@ -10,7 +10,9 @@
 h3 {
   font-family: 'Raleway', 'bold';
 }
-
+.p{
+  font-family: 'Raleway';
+}
 @keyframes draw-attention {
 
     0%   { box-shadow: 0 0 0 rgb(48, 156, 5); }

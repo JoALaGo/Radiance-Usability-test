@@ -70,7 +70,22 @@
 </head>
 
 <body>
-  <button id="questionnare_button" style="visibility:hidden;float: inline-end;bottom: 0px;position: fixed;right: 0px;z-index: 10000;/*! background: ; */background-color: white;border-style: dotted;border-width: thick;border: 1px;border-color: green;border-style: solid;font-size: large;" class="shadow-sm attention" onclick=" window.open('https://forms.gle/YRKW949NQaDukpB27', '_blank').focus();">Go to the questionnarie</button>
+  <div style="visibility:hidden;position: fixed;bottom: 0;right: 0;z-index: 100 !important;font-size: small !important;height: auto;width: 100%;" class="row rule attention" id="tutorial_row_tools">
+    <div class="col rule">
+      <button id="view_tutorial_sample" style="visibility:'';/*! float: inline-end; *//*! bottom: 0px; *//*! position: fixed; */right: 0px;z-index: 10000;/*! background: ; */background-color: white;border-style: dotted;border-width: thick;border: 1px;border-color: green;border-style: solid;font-size: large;height: 100%;width: 100%;font-size: initial;" onclick="viewVideogameSample();" class="shadow-sm attention ">View video game sample</button>
+      
+   </div>
+    <div class="col rule">
+      <button id="tutorial_rerun_button" style="visibility:'';/*! float: inline-end; *//*! bottom: 0px; *//*! position: fixed; */right: 0px;z-index: 10000;/*! background: ; */background-color: white;border-style: dotted;border-width: thick;border: 1px;border-color: green;border-style: solid;font-size: large;height: 100%;width: 100%;font-size: initial;" onclick="rerunTutorial()" class="shadow-sm attention ">Re-run tutorial</button>
+      
+   </div>
+    <div class="col rule">
+       <button id="questionnare_button" class="shadow-sm attention" onclick=" window.open('https://forms.gle/YRKW949NQaDukpB27', 'incognito').focus();" style="visibility:'';z-index: 10000;/*! background: ; */background-color: white;border-style: dotted;border-width: thick;border: 1px;border-color: green;border-style: solid;font-size: initial;width: 100%;">Go to the questionnarie</button>
+      </div>
+      
+     
+  </div>
+ 
   <!--The begining of the parent for all the elements in the page-->
   <div class="container-fluid shadow-sm" style="font-family:'Raleway'">
     <!-- Row for the main menu-->
