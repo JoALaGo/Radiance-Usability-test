@@ -242,6 +242,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let tutorial = true;
     if (tutorial == true) { loadSample() };
 
+   setInterval(function () {
+        // call your function here
+        if (document.getElementsByClassName('tutorial-box')[0] == null) {
+            alert('Out of bounds');
+        }
+    }, 2000);
+
 });
 
 function loadSample() {
@@ -387,7 +394,7 @@ function loadSample() {
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'In order to obtain a rating, a function must have a trigger that defines what "activates" it; sets it in action. You can define this in the model sequencer. ',
+                text: 'In order to obtain a rating, a function must have a trigger that definesthat defines what "activates" it (i.e., sets it in action). You can define this in the model sequencer. ',
                 position: 'right',
                 callback: {
                     fn: () => {
@@ -455,15 +462,15 @@ function loadSample() {
                     fn: () => {
                         document.getElementById('run_algorithm_button').click();
                         document.getElementById('highlights_found').parentNode.parentElement.classList.add('attention');
-                        setTimeout(() => {document.getElementById('highlights_found').parentNode.click(); }, 1000);
-                        
-                        
+                        setTimeout(() => { document.getElementById('highlights_found').parentNode.click(); }, 1000);
+
+
                     }
                 }
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You will find advice according to your model'+"'"+'s characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
+                text: 'You will find advice according to your model' + "'" + 's characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -473,17 +480,17 @@ function loadSample() {
             },
             {
                 highlight: '#plantuml_builder_timing',
-                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously to the function that triggered it. For instance, the functions in step 3 are all executed in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function.',
+                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are all executed in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function.',
                 position: 'left',
                 callback: {
                     fn: () => {
-                        document.getElementById('questionnare_button').style.visibility="";
+                        document.getElementById('questionnare_button').style.visibility = "";
                     }
                 }
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You can now use RADIANCE. Try to build a model that represents a real world example, such as YouTube, with 4 functions: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Thank you for your time!',
+                text: 'You can now use RADIANCE. Try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Thank you for your time!',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -559,12 +566,12 @@ class windowManager {
         //two types of windows correspond to the popups
         if (type == 'sequence') {
             let window_id = createUID();
-            let new_window = window.open(location.toString().replace('#','') + "sequence_preview.html", window_id);
+            let new_window = window.open(location.toString().replace('#', '') + "sequence_preview.html", window_id);
             this.sequence_diagram_popups.push(new_window);
 
         } else {
             let window_id = createUID();
-            let new_window = window.open(location.toString().replace('#','')  + "timing_preview.html", window_id);
+            let new_window = window.open(location.toString().replace('#', '') + "timing_preview.html", window_id);
             this.timing_diagram_popups.push(new_window);
         }
     }
