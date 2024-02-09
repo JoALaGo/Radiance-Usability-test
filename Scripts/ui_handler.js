@@ -504,7 +504,7 @@ function loadSample() {
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You can now use RADIANCE. Try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Thank you for your time!',
+                text: 'You can now use RADIANCE. Try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Tip: Do not leave software category, type and hardware unselected. Thank you for your time!',
                 position: 'bottom',
                 callback: {
                     fn: () => {
