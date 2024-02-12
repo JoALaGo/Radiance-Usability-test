@@ -210,7 +210,7 @@ animation: draw-attention 3s ease-in-out infinite !important;
 }
 
 .accordion-button::after {
-  background-image: url('https://icons8.com/icon/GojwEbquexGa/unpacking');
+  
 }
 
 button:not(.collapsed)::after {
