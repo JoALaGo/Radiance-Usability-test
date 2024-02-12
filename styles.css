@@ -6,13 +6,19 @@
   color: #707070;
 
 }
+@font-face{ 
+	font-family: 'Roboto';
+	src: url('./res/Fonts/Roboto-Regular-webfont.woff') format('woff'),
+}
 
 h3 {
-  font-family: 'Raleway', 'bold';
+  font-family: 'Roboto', 'bold';
 }
 .p{
-  font-family: 'Raleway';
+  font-family: 'Roboto';
 }
+
+
 @keyframes draw-attention {
 
     0%   { box-shadow: 0 0 0 rgb(48, 156, 5); }
@@ -44,7 +50,7 @@ animation: draw-attention 3s ease-in-out infinite !important;
 
 .accordion-button.no-arrow:after {
   display: none !important;
-  font-family: 'Raleway', 'bold';
+  font-family: 'Roboto', 'bold';
   text-shadow: #707070;
 }
 
@@ -160,31 +166,31 @@ animation: draw-attention 3s ease-in-out infinite !important;
 }
 
 .content_box_title {
-  font-family: 'Raleway', 'bold';
+  font-family: 'Roboto', 'bold';
   background-color: transparent !important;
   font-size: x-large;
 }
 
 .content_box_option_bar {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: small;
   border: 1px !important;
 }
 
 .content_box_option {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
 }
 
 .col-sm-12{
-  font-family: 'Raleway'!important;
+  font-family: 'Roboto'!important;
 }
 .col-sm-4{
-  font-family: 'Raleway'!important;
+  font-family: 'Roboto'!important;
 }
 .col-sm-6{
-  font-family: 'Raleway'!important;
+  font-family: 'Roboto'!important;
 }
 
 .content_box_option:hover {
@@ -216,7 +222,7 @@ button:not(.collapsed)::after {
 .btn-outline-secondary {
   border: 0px solid !important;
   color: black !important;
-  font-family: 'Raleway', 'bold';
+  font-family: 'Roboto', 'bold';
 
 }
 
@@ -247,7 +253,7 @@ button:not(.collapsed)::after {
   -webkit-box-shadow: inset 0px 0px 9px 0px rgba(120, 120, 120, 0.58);
   -moz-box-shadow: inset 0px 0px 9px 0px rgba(120, 120, 120, 0.58);
   box-shadow: inset 0px 0px 9px 0px rgba(120, 120, 120, 0.58);
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
@@ -270,7 +276,7 @@ button:not(.collapsed)::after {
 }
 
 .generic_button {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   background-color: transparent;
@@ -302,7 +308,7 @@ button:not(.collapsed)::after {
 }
 
 .teacher_variable {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   color: white;
@@ -310,7 +316,7 @@ button:not(.collapsed)::after {
 }
 
 .teacher_variable:hover {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: large;
   cursor: pointer;
   color: white;
@@ -326,7 +332,7 @@ button:not(.collapsed)::after {
 }
 
 .teacher_variable::after {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: large;
   cursor: pointer;
   color: red;
@@ -375,7 +381,7 @@ button:not(.collapsed)::after {
   min-height: 40px;
   max-height: 50px;
   overflow: auto;
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   background-color: transparent;
@@ -400,7 +406,7 @@ button:not(.collapsed)::after {
   min-height: 40px;
   max-height: 50px;
   overflow: auto;
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   background-color: transparent;
@@ -417,7 +423,7 @@ button:not(.collapsed)::after {
   margin-right: 7px
 }
 .content_box_column:hover {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   background-color: transparent;
@@ -453,7 +459,7 @@ button:not(.collapsed)::after {
 }
 
 .generic_negative_button {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: medium;
   cursor: pointer;
   background-color: white;
@@ -479,7 +485,7 @@ button:not(.collapsed)::after {
 }
 
 .modal {
-  font-family: 'Raleway' !important;
+  font-family: 'Roboto' !important;
 }
 .assign_search_bar{
   width: 100%;
@@ -496,7 +502,7 @@ button:not(.collapsed)::after {
 .tree_branch_element{
 
   overflow: auto;
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: small;
   cursor: pointer;
   background-color: seashell;
@@ -512,7 +518,7 @@ button:not(.collapsed)::after {
 }
 
 .tree_branch_element:hover {
-  font-family: 'Raleway';
+  font-family: 'Roboto';
   font-size: small;
   cursor: pointer;
   border: white;
