@@ -34,9 +34,7 @@
   <script type="text/javascript" src="./Scripts/schema_handler.js"></script>
   <script type="text/javascript" src="./Scripts/cache_handler.js"></script>
   <script type="text/javascript" src="./Scripts/builder_handler.js"></script>
-  <script type="text/javascript" src="./Scripts/collections_handler.js"></script>
-  <script type="text/javascript" src="./Scripts/interpreter_handler.js"></script>
-  <script type="text/javascript" src="./Scripts/interpreter_engine.js"></script>
+
   <script type="text/javascript" src="./Scripts/energy_report_advice.js"></script>
 
 
@@ -54,7 +52,8 @@
   <!--So we can plot the results of the lab-->
   <script src="./Scripts/Plotly/plotly.js" charset="utf-8"></script>
 
-
+<!--So that we get our rating from website carbon-->
+<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
 
 
 
@@ -108,7 +107,7 @@
         </button>
 
       </div>
-      <div class="col-2">
+      <div class="col-1">
         <div class="rule">
           <div class="col-12 text-center">
             <h5 style="font-size:smaller">Project size: <span id="mem_usage"></span><span>/5MB</span></h5>
@@ -122,6 +121,9 @@
         </div>
 
       </div>
+      <div class="col-1">
+        <div id="wcb" class="carbonbadge"></div>
+        </div>
     </div>
   </div>
 
