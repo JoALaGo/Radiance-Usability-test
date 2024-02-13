@@ -408,7 +408,7 @@ function loadSample() {
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'In order to obtain a rating, a function must have a trigger that definesthat defines what "activates" it (i.e., sets it in action). You can define this in the model sequencer. ',
+                text: 'In order to obtain a rating, a function must have a trigger that defines what "activates" it (i.e., sets it in action). You can define this in the model sequencer. ',
                 position: 'right',
                 callback: {
                     fn: () => {
