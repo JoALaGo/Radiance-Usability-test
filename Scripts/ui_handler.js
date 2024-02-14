@@ -19,7 +19,7 @@ var external_triggers_available_entities;
 var inheritance_diagram;
 var inheritance_diagram_two_objects = new Object();
 var inheritance_diagram_branches = new Object();
-
+var tutorial_step = 0;
 
 //this section if for adding things to the html toolbox
 var add_code_execution = { name: "Trigger code", content: 'onClick="executeCustomCode(' + "'" + 'variableName_reserved_code' + "'" + ')"', notes: '' };
@@ -49,6 +49,16 @@ var collection_builder_algorithm_editor;
 var builder_ui_lines = [];
 var popups_manager;
 var tutorial_step = 0;
+var notify_tutorial_exit_once = false;
+var introductory_modal_open = true;
+var mytutorial;
+
+//The tutorial for this release
+
+
+// end of the tutorial.
+
+
 class externalTrigger {
     constructor(parent_collection, parent_profile, target_profile, target_operation, trigger_type, trigger_value, source_operation) {
         this.element_id = createUID()
@@ -242,73 +252,84 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let tutorial = true;
     if (tutorial == true) { loadSample() };
 
-   setInterval(function () {
+    setInterval(function () {
         // call your function here
         if (document.getElementsByClassName('tutorial-box')[0] == null) {
-        document.getElementById('tutorial_row_tools').style.visibility='';
-        }else{
-            document.getElementById('tutorial_row_tools').style.visibility='hidden';
+            document.getElementById('tutorial_row_tools').style.visibility = '';
+            console.log("Tutorial state: \n" + "Last tutorial step: " + this.tutorial_step + "\n" + "Introductory modal visible: " + introductory_modal_open + "\n" + "Notified the user of tutorial exit:" + this.notify_tutorial_exit_once);
+            if (this.tutorial_step < 18) {
+                //the user stepped out of the tutorial
+                if (this.notify_tutorial_exit_once == false && introductory_modal_open == false && tutorial_step < 19) {
+                    alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'You just exited the tutorial, click on "return to the tutorial" button in the bottom left corner if you wish to resume it.');
+                    document.getElementsByClassName('ajs-dimmer')[0].style.opacity = '0';
+                    this.notify_tutorial_exit_once = true;
+                }
+
+            }
+        } else {
+            document.getElementById('tutorial_row_tools').style.visibility = 'hidden';
         }
+
+
     }, 2000);
 
 });
 
 
-
-function loadSample() {
-    let project = atob(tutorial_64);
-    //we load the project from the variable tutorial_64 in the file 
-    this.db = JSON.parse(project);
-    updateLocalStorage();
-    setBuilderSelection('profile', 1601203758668);
-    menuSelection('builder');
-    //check the size of the screen 
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    let warning = '';
-    if (w < 1080) {
-        warning = '<div id="size-check" class="report_highlight_advice" style="">  <h5 style="color:darkred;text-align:center;">Your screen does not meet the minimum requirement for this test: a screen resolution of at least 1080x768<br> <u style="color:red;text-align:center;">Please refrain from taking this test</u></h5></div>';
+function resumeTutorial() {
+    if (this.tutorial_step >= 9) {
+        this.db = JSON.parse(atob(sample_profile_64));
+        updateLocalStorage();
+        setBuilderSelection('profile', 887770500712);
+        document.getElementById('_15_parent_header').parentElement.click();
     }
-    let introduction = '<div class="" style="font-family: Roboto;"><h5 style="text-align:center;">Welcome to RADIANCE, a Green Software Engineering tool currently in a <i><u style="">BETA</u></i> state</h5> <ul><li>RADIANCE allows you to <u>design</u> the architecture and behavior of software using your previous knowledge, such as UML and programming-related concepts.</li> <li>The <b>objective</b> of this test is for the testers to decide if our <u style="color:darkgreen">green</u> features make you more aware of how certain software characteristics affect its energy consumption.</li><li> RADIANCE' + "'s" + ' <u style="color:darkgreen">green</u> features:<ul><li>Categorize from A to G the functions you declare by using a custom algorithm.<li>Rate the prospective consumption of the execution of your software model.</li><li>Create a report with advice on what choices can make the final software more efficient.</li></ul></ul>' + warning + 'The tutorial and its following questionnare will only take 10 minutes. Click "OK" to begin.</div>';
 
-
-    alertify.confirm('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', introduction, function () {
-        mytutorial.start();
-    }
-        , function () { alertify.error('Usability test cancelled.') });
-
-
-    var mytutorial = new Tutorial("usability_test", {
+    //lets load the tutorial back to where the user left off.
+    //So.. we need to re-declare the tutorial, otherwise it decides to highlight the wrong parts of he tool. A waste of space. 
+    mytutorial = new Tutorial("usability_test", {
         steps: [
             {
 
                 highlight: "#radiance_logo_top",
 
-                text: 'Before we continue: remember that you can skip to any step you want using the progress bar below.',
+                text: 'Before we continue: you can skip to any step you want using the progress bar below.',
                 position: 'bottom',
                 callback: {
-                 
+                    fn: () => {
+                        this.tutorial_step = 0;
+                    }
                 }
             },
             {
                 highlight: "#currently_selected_profile",
 
                 text: 'You are currently inside an empty software model called "Tutorial"',
-                position: 'bottom'
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 1;
+                    }
+                }
             },
             {
                 highlight: "#available_parents",
 
-                text: 'There are three main categories inside of a profile: Model characteristics, Functions/methods and Parameters. ',
-                position: 'right'
+                text: 'There are three main categories inside of a model: Model characteristics, Functions/methods and Parameters. ',
+                position: 'right',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 2;
+                    }
+                }
             },
             {
                 highlight: "#_0_parent_header",
 
-                text: 'Model characteristics are used to describe the general behavioral attributes of the model. When you click on it, the current model' + "'" + 's characteristics get displayed.',
+                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modelling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
                 position: 'right',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 3;
                         populateChildren('0', null, null, false, true);
                         setTimeout(() => { document.getElementById("Computation_centric_subset_header").firstChild.click(); }, 1500);
                     }
@@ -317,10 +338,11 @@ function loadSample() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'Some sub-categories are displayed inside, as well as several properties. Each property represents a characteristic of the behavior of the software you are modeling, and each one affects how your model is rated according to several energy-consumption guidelines.',
+                text: 'Some sub-categories are displayed inside, as well as several properties. Each property represents a characteristic, and each one affects how your model is rated according to several energy-consumption considerations that are linked to them.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 4;
                         setTimeout(() => { document.getElementById("Computation_centric_subset_header").firstChild.click(); }, 1500);
 
                     }
@@ -329,10 +351,11 @@ function loadSample() {
             {
                 highlight: "#_15_parent_header",
 
-                text: 'The Functions/Methods category is used to create instances of new functions and methods. You can add a new Function/Method by clicking in the "+" icon. Click on "Next" to see it. ',
+                text: 'The Functions/Methods category is used to create abstract instances of new functions and methods. You can think of it as object-oriented software design. Click on "Next". ',
                 position: 'bottom',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 5;
                         createInstanceFromProfileElement('test', 'available_children', 15, 15, 1);
                         populateChildren('15', null, null, true, true);
 
@@ -346,6 +369,7 @@ function loadSample() {
                 position: 'bottom',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = this.tutorial_step = 6;
                         let children = document.getElementById('available_children_area');
                         let available_children = children.getElementsByClassName("accordion-button");
                         available_children[0].click();
@@ -357,10 +381,11 @@ function loadSample() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'You will see properties inside of different categories that correspond to their nature. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do. (Attention: functions/methods are called operations in some places).',
+                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do. (Attention: functions/methods are called operations in some places).',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 7;
                         let children = document.getElementById('available_children_area');
                         let available_children = children.getElementsByClassName("accordion-button");
                         available_children[0].click();
@@ -372,9 +397,12 @@ function loadSample() {
 
                 highlight: "#_19_parent_header",
 
-                text: 'Creating parameters and editing them works the same as functions/methods. Parameters are important to define messages among functions later in the design process. Always keep in mind what data your functions receive and send among them.',
+                text: 'Creating parameters and editing them works the same as functions/methods. Parameters are important as they will help you to chain functions together in a later stage. Always keep in mind what data your functions receive and send among them, and declare them here by creating instances.',
                 position: 'right',
                 callback: {
+                    fn: () => {
+                        this.tutorial_step = 8;
+                    }
 
                 }
             },
@@ -393,6 +421,7 @@ function loadSample() {
                         setBuilderSelection('profile', 887770500712);
                         setTimeout(() => { runBuilderAlgorithm('profile_builder') }, 300);
                         $('#temporal_report_modal').modal('toggle');
+                        this.tutorial_step = 9;
                     }
                 }
             },
@@ -402,57 +431,64 @@ function loadSample() {
                 text: 'As you can see, the functions in this model are rated with a letter and a color. Ratings go from A (most frugal) to G, and they depend on the amount of resources a function consumes, as well as the behavioral traits of the model.',
                 position: 'left',
                 callback: {
+                    fn: () => {
+                        this.tutorial_step = 10;
+                    }
 
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'In order to obtain a rating, a function must have a trigger that defines what "activates" it (i.e., sets it in action). You can define this in the model sequencer. ',
+                text: 'In order to obtain a rating, a function must have a trigger. Triggers decide what "activates" a function. You can create them in the "model sequencer" ',
                 position: 'right',
                 callback: {
                     fn: () => {
-                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
+                        this.tutorial_step = 11;
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'There are 3 things that can trigger a function: receiving a parameter, an active model state, and another function.',
+                text: 'There are 3 types of triggers: parameters, a hypothetical model state, and another function.',
                 position: "right",
 
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 12;
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'Triggering a function (A) with a parameter requires an exchange of a parameter with another function (B): Function B -parameter-> Function A. These relationships are created in the "Messages section" usign the parameters that you created before.',
+                text: 'Message exchanges declare how parameters are exchanged among functions. They are vital for the triggers that depend on parameters.',
                 position: "right",
 
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 13;
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.remove('attention');
                         document.getElementById('triggers_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('triggers_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].style.top = '-60px';   setTimeout(() => {  document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" });}, 500);}, 1000);
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "run" option means that the function will run in the beginning. It is a good idea to create this trigger in the beginning of every model. ',
+                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "run" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
                 position: "right",
 
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 14;
                         setTimeout(() => { document.getElementsByClassName('tutorial-close')[0].scrollIntoView({ behavior: "smooth" }); }, 1000);
                         document.getElementById('triggers_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.remove('attention');
                     }
@@ -460,20 +496,22 @@ function loadSample() {
             },
             {
                 highlight: "#plantuml_builder_flow",
-                text: 'As you define messages, a sequence diagram is automatically generated to help you understand the flow of the functions. After the tutorial, you can click on "pop-out" to view it in another tab.',
+                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. After the tutorial, you can click on "pop-out" to view it in another tab.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 15;
                         document.getElementById('run_algorithm_button').classList.add('attention');
                     }
                 }
             },
             {
                 highlight: '#run_algorithm_button',
-                text: 'Once your model is ready you can rate its elements using this button. Keep in mind this: all the properties of the model and its functions should have a valid value, and the functions a valid trigger.',
+                text: 'Once your model is ready you can rate its functions using this button. Keep in mind this: all the properties of the model and its functions should have a valid value, and the functions a valid trigger.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 16;
                         document.getElementById('run_algorithm_button').click();
                         document.getElementById('highlights_found').parentNode.parentElement.classList.add('attention');
                         setTimeout(() => { document.getElementById('highlights_found').parentNode.click(); }, 1000);
@@ -488,6 +526,7 @@ function loadSample() {
                 position: 'bottom',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 17;
                         $('#temporal_report_modal').modal('toggle');
                     }
                 }
@@ -498,22 +537,384 @@ function loadSample() {
                 position: 'left',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 18;
                         document.getElementById('questionnare_button').style.visibility = "";
+                        
                     }
                 }
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You can now use RADIANCE. Try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Tip: Do not leave software category, type and hardware unselected. Thank you for your time!',
+                text: 'You can now use RADIANCE. As a small test, try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Tip: Do not leave software category, type and hardware unselected. Thank you for your time!',
                 position: 'bottom',
                 callback: {
                     fn: () => {
+                        this.tutorial_step = 19;
                         let project = atob(tutorial_64);
                         //we load the project from the variable tutorial_64 in the file 
                         this.db = JSON.parse(project);
+                        document.getElementById('review_instructions').style.visibility = 'visible';
                         updateLocalStorage();
                         setBuilderSelection('profile', 1601203758668);
                         menuSelection('builder');
+                        setTimeout(() => { var line = new LeaderLine(
+                            document.getElementById('radiance_logo_top'),
+                            document.getElementById('review_instructions'),{middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'),dash: {animation: true},startPlugColor: '#63b00b',
+                            color: '#63b00b',
+                            endPlugColor: '#63b00b',endPlug: 'hand'}
+        
+                        );
+
+                        setTimeout(()=>{
+                            line.remove();
+                            
+                        },10000)
+                    
+                    }, 1000);
+                        
+
+
+                        
+
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+        ],
+        progressbar: true
+    });
+    mytutorial.start();
+    mytutorial.goToStep(this.tutorial_step);
+
+
+}
+function loadSample() {
+    let project = atob(tutorial_64);
+    //we load the project from the variable tutorial_64 in the file 
+    this.db = JSON.parse(project);
+    updateLocalStorage();
+    setBuilderSelection('profile', 1601203758668);
+    menuSelection('builder');
+    //check the size of the screen 
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    let warning = '';
+    if (w < 1080) {
+        warning = '<div id="size-check" class="report_highlight_advice" style="">  <h5 style="color:darkred;text-align:center;">Your screen does not meet the minimum requirement for this test: a screen resolution of at least 1080x768<br> <u style="color:red;text-align:center;">Please refrain from taking this test</u></h5></div>';
+    }
+    let introduction = '<div class="" style="font-family: Roboto;"><h5 style="text-align:center;">Welcome to the usability test of RADIANCE, a Green Software Engineering tool currently in a <i><u style="">BETA</u></i> state</h5> <ul><li>RADIANCE allows you to <u>design</u> the architecture and behavior of software using your previous knowledge, such as UML and programming-related concepts.</li> <li>The <b>objective</b> of this test is for the testers to decide if our <u style="color:darkgreen">green</u> features make you more aware of how certain software characteristics affect its energy consumption.</li><li> RADIANCE' + "'s" + ' <u style="color:darkgreen">green</u> features:<ul><li>Categorize from A to G the functions you declare by using a custom algorithm.<li>Rate the prospective consumption of the execution of your software model.</li><li>Create a report with advice on what choices can make the final software more efficient.</li></ul></ul>' + warning + 'The tutorial and its following questionnare will only take 10 minutes. Click "OK" to begin.</div>';
+
+
+
+
+    alertify.confirm('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', introduction, function () {
+        introductory_modal_open = false;
+        console.log("Is the introductory modal visible? " + introductory_modal_open);
+        mytutorial.start();
+
+    }, function () { alertify.error('Usability test cancelled.') });
+
+
+    mytutorial = new Tutorial("usability_test", {
+        steps: [
+            {
+
+                highlight: "#radiance_logo_top",
+
+                text: 'Before we continue: you can skip to any step you want using the progress bar below.',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 0;
+                    }
+                }
+            },
+            {
+                highlight: "#currently_selected_profile",
+
+                text: 'You are currently inside an empty software model called "Tutorial"',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 1;
+                    }
+                }
+            },
+            {
+                highlight: "#available_parents",
+
+                text: 'There are three main categories inside of a model: Model characteristics, Functions/methods and Parameters. ',
+                position: 'right',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 2;
+                    }
+                }
+            },
+            {
+                highlight: "#_0_parent_header",
+
+                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modelling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
+                position: 'right',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 3;
+                        populateChildren('0', null, null, false, true);
+                        setTimeout(() => { document.getElementById("Computation_centric_subset_header").firstChild.click(); }, 1500);
+                    }
+                }
+            },
+            {
+                highlight: "#available_variables_area",
+
+                text: 'Some sub-categories are displayed inside, as well as several properties. Each property represents a characteristic, and each one affects how your model is rated according to several energy-consumption considerations that are linked to them.',
+                position: 'left',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 4;
+                        setTimeout(() => { document.getElementById("Computation_centric_subset_header").firstChild.click(); }, 1500);
+
+                    }
+                }
+            },
+            {
+                highlight: "#_15_parent_header",
+
+                text: 'The Functions/Methods category is used to create abstract instances of new functions and methods. You can think of it as object-oriented software design. Click on "Next". ',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 5;
+                        createInstanceFromProfileElement('test', 'available_children', 15, 15, 1);
+                        populateChildren('15', null, null, true, true);
+
+                    }
+                }
+            },
+            {
+                highlight: "#available_children_area",
+
+                text: 'What you see here are the instances of the Functions/Models you have created, each one has their own name and their own characteristics. When you click on one, its properties are shown to you. Click on "Next".',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = this.tutorial_step = 6;
+                        let children = document.getElementById('available_children_area');
+                        let available_children = children.getElementsByClassName("accordion-button");
+                        available_children[0].click();
+                        setTimeout(() => { document.getElementById("resource_usage_subset_header").firstChild.click(); document.getElementById('Processor_usage_1673438264399').classList.add('attention') }, 2000);
+
+                    }
+                }
+            },
+            {
+                highlight: "#available_variables_area",
+
+                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do. (Attention: functions/methods are called operations in some places).',
+                position: 'left',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 7;
+                        let children = document.getElementById('available_children_area');
+                        let available_children = children.getElementsByClassName("accordion-button");
+                        available_children[0].click();
+
+                    }
+                }
+            },
+            {
+
+                highlight: "#_19_parent_header",
+
+                text: 'Creating parameters and editing them works the same as functions/methods. Parameters are important as they will help you to chain functions together in a later stage. Always keep in mind what data your functions receive and send among them, and declare them here by creating instances.',
+                position: 'right',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 8;
+                    }
+
+                }
+            },
+            {
+
+                highlight: "#radiance_logo_top",
+
+                text: 'Lets load an example of a model of a video game',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+
+                        //we load the project from the variable tutorial_64 in the file 
+                        this.db = JSON.parse(atob(sample_profile_64));
+                        updateLocalStorage();
+                        setBuilderSelection('profile', 887770500712);
+                        setTimeout(() => { runBuilderAlgorithm('profile_builder') }, 300);
+                        $('#temporal_report_modal').modal('toggle');
+                        this.tutorial_step = 9;
+                    }
+                }
+            },
+            {
+                highlight: "#available_children_area",
+
+                text: 'As you can see, the functions in this model are rated with a letter and a color. Ratings go from A (most frugal) to G, and they depend on the amount of resources a function consumes, as well as the behavioral traits of the model.',
+                position: 'left',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 10;
+                    }
+
+                }
+            },
+            {
+                highlight: "#model_sequencer_column",
+
+                text: 'In order to obtain a rating, a function must have a trigger. Triggers decide what "activates" a function. You can create them in the "model sequencer" ',
+                position: 'right',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 11;
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
+                    }
+                }
+            },
+            {
+                highlight: "#model_sequencer_column",
+
+                text: 'There are 3 types of triggers: parameters, a hypothetical model state, and another function.',
+                position: "right",
+
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 12;
+                        //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
+                        document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
+                    }
+                }
+            },
+            {
+                highlight: "#model_sequencer_column",
+
+                text: 'Message exchanges declare how parameters are exchanged among functions. They are vital for the triggers that depend on parameters.',
+                position: "right",
+
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 13;
+                        document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.remove('attention');
+                        document.getElementById('triggers_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
+                        document.getElementById('triggers_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
+                        setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
+                    }
+                }
+            },
+            {
+                highlight: "#model_sequencer_column",
+
+                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "run" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
+                position: "right",
+
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 14;
+                        setTimeout(() => { document.getElementsByClassName('tutorial-close')[0].scrollIntoView({ behavior: "smooth" }); }, 1000);
+                        document.getElementById('triggers_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.remove('attention');
+                    }
+                }
+            },
+            {
+                highlight: "#plantuml_builder_flow",
+                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. After the tutorial, you can click on "pop-out" to view it in another tab.',
+                position: 'left',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 15;
+                        document.getElementById('run_algorithm_button').classList.add('attention');
+                    }
+                }
+            },
+            {
+                highlight: '#run_algorithm_button',
+                text: 'Once your model is ready you can rate its functions using this button. Keep in mind this: all the properties of the model and its functions should have a valid value, and the functions a valid trigger.',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 16;
+                        document.getElementById('run_algorithm_button').click();
+                        document.getElementById('highlights_found').parentNode.parentElement.classList.add('attention');
+                        setTimeout(() => { document.getElementById('highlights_found').parentNode.click(); }, 1000);
+
+
+                    }
+                }
+            },
+            {
+                highlight: '#radiance_logo_top',
+                text: 'You will find advice according to your model' + "'" + 's characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 17;
+                        $('#temporal_report_modal').modal('toggle');
+                    }
+                }
+            },
+            {
+                highlight: '#plantuml_builder_timing',
+                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are all executed in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function.',
+                position: 'left',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 18;
+                        document.getElementById('questionnare_button').style.visibility = "";
+                        
+                    }
+                }
+            },
+            {
+                highlight: '#radiance_logo_top',
+                text: 'You can now use RADIANCE. As a small test, try to build a model that represents YouTube, limiting yourself to the following 4 functions in a sequence: "Load video", "Play video", "Play sound" and "Show similar videos". Once you are done, rate your model and finish by filling our brief questionnare by clicking on the button located at the bottom right corner. Tip: Do not leave software category, type and hardware unselected. Thank you for your time!',
+                position: 'bottom',
+                callback: {
+                    fn: () => {
+                        this.tutorial_step = 19;
+                        let project = atob(tutorial_64);
+                        //we load the project from the variable tutorial_64 in the file 
+                        this.db = JSON.parse(project);
+                        document.getElementById('review_instructions').style.visibility = 'visible';
+                        updateLocalStorage();
+                        setBuilderSelection('profile', 1601203758668);
+                        menuSelection('builder');
+                        setTimeout(() => { var line = new LeaderLine(
+                            document.getElementById('radiance_logo_top'),
+                            document.getElementById('review_instructions'),{middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'),dash: {animation: true},startPlugColor: '#63b00b',
+                            color: '#63b00b',
+                            endPlugColor: '#63b00b',endPlug: 'hand'}
+        
+                        );
+
+                        setTimeout(()=>{
+                            line.remove();
+                            
+                        },10000)
+                    
+                    }, 1000);
+                        
+
+
+                        
+
+
                     }
                 }
             }
@@ -531,22 +932,21 @@ function loadSample() {
     });
 
 
-
 }
 
-function rerunTutorial(){
-    alertify.confirm('Warning', 'All your progress will be lost. If you wish to see the complete tutorial or a part of it again without losing progress, open the same URL in an incognito tab. Otherwise, you can click on "OK". <br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can'+"'"+'t I just reload the tutorial? <br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
+function rerunTutorial() {
+    alertify.confirm('Warning', 'All your progress will be lost. If you wish to see the complete tutorial or a part of it again without losing progress, open the same URL in an incognito tab. Otherwise, you can click on "OK". <br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can' + "'" + 't I just reload the tutorial? <br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
         loadSample();
         mytutorial.start();
     }
-        , function () {  })
+        , function () { })
 }
 
-function viewVideogameSample(){
-    alertify.confirm('Warning', 'To view the Video Game sample: <ol><li>Open the same URL in a private (incognito) tab.</li><li>Navigate to step 10 of the tutorial and click on "Next"</li><li>Cancel the tutorial.</li></ol><br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can'+"'"+'t I view the sample here?<br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
-        
+function viewVideogameSample() {
+    alertify.confirm('Warning', 'To view the Video Game sample: <ol><li>Open the same URL in a private (incognito) tab.</li><li>Navigate to step 10 of the tutorial and click on "Next"</li><li>Cancel the tutorial.</li></ol><br> <div class="report_highlight_advice"><h6 style="font-size:small">Why can' + "'" + 't I view the sample here?<br>RADIANCE works completely on the client side. To make this work, we use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a> feature to store all the data related to the models. Reloading the tutorial will reset the localStorage to its orginal state, removing whatever progress you have made.</h6></div>', function () {
+
     }
-        , function () {  })
+        , function () { })
 }
 
 function restartTooltips() {

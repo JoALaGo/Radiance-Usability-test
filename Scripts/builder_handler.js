@@ -1125,6 +1125,11 @@ function saveRawInstanceEdition(dom_target, property_name, parent_index, instanc
     console.log("changing the property " + property_name + '  with value ' + instance[property_name] + ' to ' + new_value);
     instance[property_name] = new_value.valueOf();
     console.log("property value found: " + instance[property_name]);
+    //if the builder is visible, refresh the operations.
+    if(document.getElementById('_15_parent_header')!=null ){
+        document.getElementById('_15_parent_header').parentElement.click();
+
+    }
     saveInstanceCache();
     updateLocalStorage();
 
