@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             if (this.tutorial_step < 18) {
                 //the user stepped out of the tutorial
                 if (this.notify_tutorial_exit_once == false && introductory_modal_open == false && tutorial_step < 19) {
-                    alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'You just exited the tutorial, click on "return to the tutorial" button in the bottom left corner if you wish to resume it.');
+                    alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'You just exited the tutorial, click on the "Resume tutorial" button located in the bottom left corner if you wish to resume it.');
                     document.getElementsByClassName('ajs-dimmer')[0].style.opacity = '0';
                     this.notify_tutorial_exit_once = true;
                 }
