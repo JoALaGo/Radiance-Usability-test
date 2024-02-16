@@ -401,6 +401,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 } else if (!this._stepInBounds(step)) {
                     throw new Error("Step out of bounds.");
                 } else if (step === this.step) {
+                    this.tutorial_step = step;
                     return;
                 }
 
@@ -746,7 +747,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
 
                 progressSteps[this.step].classList.add("active");
-            }
+                localStorage.setItem('tutorial_progress',this.step);           }
         }, {
             key: "_moveHighlightBox",
             value: function _moveHighlightBox() {

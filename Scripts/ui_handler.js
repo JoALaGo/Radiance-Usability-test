@@ -48,7 +48,7 @@ var builder_algorithm_editor;
 var collection_builder_algorithm_editor;
 var builder_ui_lines = [];
 var popups_manager;
-var tutorial_step = 0;
+var tutorial_step = localStorage.getItem('tutorial_progress');
 var notify_tutorial_exit_once = false;
 var introductory_modal_open = true;
 var mytutorial;
@@ -254,11 +254,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     setInterval(function () {
         // call your function here
-        if(this.element_to_edit.element_id != 887770500712&& this.tutorial_step < 18 && this.tutorial_step>=9){
+        if(this.element_to_edit.element_id != 887770500712&& parseInt(localStorage.getItem('tutorial_progress')) < 18 && localStorage.getItem('tutorial_progress')>=9){
             this.db = JSON.parse(atob(sample_profile_64));
             updateLocalStorage();
             setBuilderSelection('profile', 887770500712);
             document.getElementById('_15_parent_header').parentElement.click();
+            setTimeout(() => {mytutorial.goToStep(localStorage.getItem('tutorial_progress')); }, 1000);
         }
         if (document.getElementsByClassName('tutorial-box')[0] == null) {
             document.getElementById('tutorial_row_tools').style.visibility = '';
