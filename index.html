@@ -295,10 +295,10 @@
               <div class="accordion-item">
                 <h2 class="accordion-header content_box_option" id="headingOne">
                   <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
+                    aria-expanded="true" aria-controls="collapseOne" onclick="event.stopPropagation();">
                     Messages<a class="instance_add" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip"
                       data-placement="bottom" title="" data-bs-original-title="Add a new result sequence"
-                      onclick="createInstanceFromProfileElement('','available_children',20,23,false,false,'',null )"><strong>+</strong></a>
+                      onclick="createInstanceFromProfileElement('','available_children',20,23,false,false,'',null );return false;"><strong>+</strong></a>
                   </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"

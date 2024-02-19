@@ -620,6 +620,18 @@ button:not(.collapsed)::after {
   text-align: center;
   cursor: pointer;
   border: black;
+  display: block;
+  height: 30px;
+  text-decoration: none !important;
+  width: 30px;
+  font-size: 1em;
+  border-radius: 50%;
+  background-color: lightseagreen;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  border: black;
+  padding-top: 5px;
 
 }
 

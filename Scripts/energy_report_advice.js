@@ -122,7 +122,7 @@ function showReport(report_errors, report_highlights) {
                 advice_content +='<div class="row report_highlight_advice"> <div class="col-sm-10 "> <li>'+new_advice+'</li> </div> <div class="col-sm-2 rule" style="align-self:center"> <a href="'+new_source+'"target="_blank" style="font-size:small;color:green">Source</a> </div> </div>';
             }
             console.log("Advice content: \n"+JSON.stringify(advice_content));
-            var element_skeleton = '<div class="col-md-12 rule report_highlight_parent"> <div class="row rule shadow"><div class="col-sm-12 text-center"><h6>When <u>'+report_highlights[x].Property.replace('_',' ')+'</u> is set to <strong>'+report_highlights[x].Value.replace('_',' ')+'</strong>:</h6></div><div class="col-sm-2 text-center" style="align-self:center"><img class="img-fluid" id="" src="'+image+'" style="min-width:32px" width="10%"><br>'+image_description+' </div><div class="col-sm-10 rule" style="font-size:15px;"> '+advice_content+' </div> </div> </div>';
+            var element_skeleton = '<div class="col-md-12 rule report_highlight_parent"> <div class="row rule shadow"><div class="col-sm-12 text-center"><h6>When <u>'+report_highlights[x].Property.replace('_',' ')+'</u> value selected is set to <strong>'+report_highlights[x].Value.replace('_',' ')+'</strong>:</h6></div><div class="col-sm-2 text-center" style="align-self:center"><img class="img-fluid" id="" src="'+image+'" style="min-width:32px" width="10%"><br>'+image_description+' </div><div class="col-sm-10 rule" style="font-size:15px;"> '+advice_content+' </div> </div> </div>';
         }
 
         document.getElementById('report-highlights').innerHTML+=element_skeleton;

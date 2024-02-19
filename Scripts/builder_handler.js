@@ -1126,9 +1126,11 @@ function saveRawInstanceEdition(dom_target, property_name, parent_index, instanc
     instance[property_name] = new_value.valueOf();
     console.log("property value found: " + instance[property_name]);
     //if the builder is visible, refresh the operations.
-    if(document.getElementById('_15_parent_header')!=null ){
+    if(document.getElementById('_15_parent_header')!=null && parent_index == 15){
         document.getElementById('_15_parent_header').parentElement.click();
 
+    }else if(document.getElementById('_15_parent_header')!=null && parent_index == 19){
+        document.getElementById('_19_parent_header').parentElement.click();
     }
     saveInstanceCache();
     updateLocalStorage();
@@ -1256,7 +1258,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
 
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-6 rule"> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(23,23,' + results_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule"> <img class="img-fluid align-middle" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule" style=""> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(23,23,' + results_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-middle" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             let document_result_origin = document.getElementById(id + '_origin');
             let document_result_parameter = document.getElementById(id + '_parameter');
@@ -1305,7 +1307,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
 
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-6 rule"> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(21,21,' + dependencies_instances[x].inner_id + ' ,false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(21,21,' + dependencies_instances[x].inner_id + ' ,false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none" > <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             var document_result_origin = document.getElementById(id + '_origin');
             var document_result_relationship_type = document.getElementById(id + '_parameter');
@@ -1366,7 +1368,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
             ids.push(id);
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-6 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             let document_result_origin = document.getElementById(id + '_origin');
             let document_result_relationship_type = document.getElementById('type_' + id + '_parameter');
@@ -1402,12 +1404,14 @@ function sequencerRulesReasoner(array) {
                 if (selection == 'parameter') {
                     //we have to populate the destination with the available parameters
                     //lets finish by adding the parameters
+                    console.log("CURRENT PARAMETER TO USE IN THE TRIGGER: "+current_instance_variables.variables.trigger_value);
+
                     for (let y in available_parameters) {
                         console.log("adding parameters to the trigger destination");
-                        document_result_destination.innerHTML += '<option value=' + "'" + available_parameters[y].inner_id + "'" + (current_instance_variables.variables.trigger_value == available_parameters[y].inner_id ? 'selected' : '') + '>' + available_parameters[y].Name + '</option>';
+                        document_result_destination.innerHTML += '<option value="">None</option><option value=' + "'" + available_parameters[y].inner_id + "'" + (current_instance_variables.variables.trigger_value == available_parameters[y].inner_id ? 'selected' : '') + '>' + available_parameters[y].Name + '</option>';
                     }
                     if (current_instance_variables.variables.trigger_value == '') {
-                        document_result_destination.innerHTML += '<option value="" selected>None</option>';
+                        console.log("There are no selected parameters for this trigger, adding a none option.");
                     }
 
                 } else if (selection == 'operation') {
@@ -1421,10 +1425,15 @@ function sequencerRulesReasoner(array) {
                     }
                 } else if (selection == 'state') {
 
-                    document_result_destination.innerHTML = "<option value='run'>run</option><option value='stop'>stop</option>";
+                    document_result_destination.innerHTML = "<option value='run'>Start</option><option value='stop'>End</option>";
                     console.log("adding states to the trigger destination");
                     if (current_instance_variables.variables.trigger_value != '') {
                         document_result_destination.value = current_instance_variables.variables.trigger_value;
+                    
+                    }else{
+                        document_result_destination.innerHTML = "<option value=''>None</option><option value='run'>Start</option><option value='stop'>End</option>";
+                        document_result_destination.value = current_instance_variables.variables.trigger_value;
+                        
                     }
 
                 }
@@ -1434,7 +1443,7 @@ function sequencerRulesReasoner(array) {
             //lets finish by adding the available types of trigger
 
             let selection = current_instance_variables.variables.trigger_Type;
-            document_result_relationship_type.innerHTML += '<option value="parameter">Parameter</option><option value="state">Profile state</option><option value="operation">by operation</option>';
+            document_result_relationship_type.innerHTML += '<option value="parameter">Parameter (sequence)</option><option value="state">Model state</option><option value="operation">Parallel to</option>';
             document_result_relationship_type.value = current_instance_variables.variables.trigger_Type;
             console.log("Setting the trigger type to:" + current_instance_variables.variables.trigger_Type);
             console.log("Actual value:" + document_result_relationship_type.value);
@@ -1480,7 +1489,7 @@ function sequencerRulesReasoner(array) {
                         destination.innerHTML += '<option value=' + "'" + available_parameters[y].inner_id + "'" + (current_instance_variables.variables.trigger_value == available_parameters[y].inner_id ? 'selected' : '') + '>' + available_parameters[y].Name + '</option>';
                     }
                     if (current_instance_variables.variables.trigger_value == '') {
-                        document_result_destination.innerHTML += '<option value="" selected>None</option>';
+                        destination.innerHTML += '<option value="" selected>None</option>';
                     }
 
                 } else if (selection == 'operation') {
@@ -1489,12 +1498,15 @@ function sequencerRulesReasoner(array) {
                     }
 
                     if (current_instance_variables.variables.trigger_value == '') {
-                        document_result_destination.innerHTML += '<option value="" selected>None</option>';
+                        destination.innerHTML += '<option value="" selected>None</option>';
                     }
                 } else if (selection == 'state') {
 
-                    destination.innerHTML = "<option value='run'>run</option><option value='stop'>stop</option>";
+                    destination.innerHTML = "<option value='run'>Start</option><option value='stop'>End</option>";
                     if (current_instance_variables.variables.trigger_value != '') {
+                        destination.value = current_instance_variables.variables.trigger_value;
+                    }else{
+                        destination.innerHTML = "<option value=''>None</option><option value='run'>Start</option><option value='stop'>End</option>";
                         destination.value = current_instance_variables.variables.trigger_value;
                     }
 
@@ -1527,7 +1539,7 @@ function populateExternalTriggers() {
         id += Math.floor(Math.random() * 100);
         id += Math.floor(Math.random() * 100);
         ids.push(id);
-        document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-6 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+        document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter" saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"  onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-6 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick=""></img> </div> </div> </div> </div> </div>';
 
         let document_result_origin = document.getElementById(id + '_origin');
         let document_result_relationship_type = document.getElementById('type_' + id + '_parameter');

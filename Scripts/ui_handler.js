@@ -52,6 +52,7 @@ var tutorial_step = localStorage.getItem('tutorial_progress');
 var notify_tutorial_exit_once = false;
 var introductory_modal_open = true;
 var mytutorial;
+var tutorial_finished_once= false;
 
 //The tutorial for this release
 
@@ -73,6 +74,9 @@ class externalTrigger {
 }
 document.addEventListener("DOMContentLoaded", function (event) {
 
+    document.addEventListener('click', function(event) {
+        console.log('Clicked Element:', event.target);
+    });
 
 
     load_schema_button.addEventListener('click', function (event) {
@@ -254,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     setInterval(function () {
         // call your function here
-        if(this.element_to_edit.element_id != 887770500712&& parseInt(localStorage.getItem('tutorial_progress')) < 18 && localStorage.getItem('tutorial_progress')>=9){
+        if(this.element_to_edit.element_id != 887770500712&& parseInt(localStorage.getItem('tutorial_progress')) < 18 && localStorage.getItem('tutorial_progress')>=9 && this.tutorial_finished_once == false){
             this.db = JSON.parse(atob(sample_profile_64));
             updateLocalStorage();
             setBuilderSelection('profile', 887770500712);
@@ -263,6 +267,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
         if (document.getElementsByClassName('tutorial-box')[0] == null) {
             document.getElementById('tutorial_row_tools').style.visibility = '';
+            if(tutorial_finished_once == true){
+                //we remove the option to resume the tutorial
+                
+                document.getElementById('resume_tutorial').style.visibility = 'hidden';    
+                document.getElementById('resume_tutorial').parentElement.classList.remove('col');
+                document.getElementById('resume_tutorial').parentElement.style.display = 'none';
+            }
+            
             console.log("Tutorial state: \n" + "Last tutorial step: " + this.tutorial_step + "\n" + "Introductory modal visible: " + introductory_modal_open + "\n" + "Notified the user of tutorial exit:" + this.notify_tutorial_exit_once);
             if (this.tutorial_step < 18 && this.tutorial_step>=9) {
                 //the user stepped out of the tutorial
@@ -389,7 +401,7 @@ function resumeTutorial() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do. (Attention: functions/methods are called operations in some places).',
+                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
                 position: 'left',
                 callback: {
                     fn: () => {
@@ -441,6 +453,7 @@ function resumeTutorial() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 10;
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
                     }
 
                 }
@@ -454,13 +467,14 @@ function resumeTutorial() {
                     fn: () => {
                         this.tutorial_step = 11;
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
+                        
                     }
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'There are 3 types of triggers: parameters, a hypothetical model state, and another function.',
+                text: 'There are 3 types of triggers: parameters, the start or the end of a model, and another function.',
                 position: "right",
 
                 callback: {
@@ -468,6 +482,7 @@ function resumeTutorial() {
                         this.tutorial_step = 12;
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
@@ -491,7 +506,7 @@ function resumeTutorial() {
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "run" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
+                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "Start" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
                 position: "right",
 
                 callback: {
@@ -504,10 +519,12 @@ function resumeTutorial() {
             },
             {
                 highlight: "#plantuml_builder_flow",
-                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. After the tutorial, you can click on "pop-out" to view it in another tab.',
+                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. Click on next to see the sequence diagram popped out and then come back.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        setTimeout(() => {
+                        popups_manager.openWindow('sequence');},500);
                         this.tutorial_step = 15;
                         document.getElementById('run_algorithm_button').classList.add('attention');
                     }
@@ -530,7 +547,7 @@ function resumeTutorial() {
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You will find advice according to your model' + "'" + 's characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
+                text: 'The highlights in the report are the things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -541,10 +558,12 @@ function resumeTutorial() {
             },
             {
                 highlight: '#plantuml_builder_timing',
-                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are all executed in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function.',
+                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are activated in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function. Click on next to see the step diagram popped out and then come back.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        setTimeout(() => {
+                        popups_manager.openWindow('timing');},500);
                         this.tutorial_step = 18;
                         document.getElementById('questionnare_button').style.visibility = "";
                         
@@ -558,6 +577,7 @@ function resumeTutorial() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 19;
+                        this.tutorial_finished_once = true;
                         let project = atob(tutorial_64);
                         //we load the project from the variable tutorial_64 in the file 
                         this.db = JSON.parse(project);
@@ -576,7 +596,7 @@ function resumeTutorial() {
                         setTimeout(()=>{
                             line.remove();
                             
-                        },10000)
+                        },15000)
                     
                     }, 1000);
                         
@@ -602,6 +622,12 @@ function resumeTutorial() {
     });
     mytutorial.start();
     mytutorial.goToStep(this.tutorial_step);
+    
+    setTimeout(()=>{
+        document.getElementsByClassName('tutorial-buttons')[0].childNodes[2].childNodes[1].click();
+        
+    },500)
+    
 
 
 }
@@ -619,7 +645,7 @@ function loadSample() {
     if (w < 1080) {
         warning = '<div id="size-check" class="report_highlight_advice" style="">  <h5 style="color:darkred;text-align:center;">Your screen does not meet the minimum requirement for this test: a screen resolution of at least 1080x768<br> <u style="color:red;text-align:center;">Please refrain from taking this test</u></h5></div>';
     }
-    let introduction = '<div class="" style="font-family: Roboto;"><h5 style="text-align:center;">Welcome to the usability test of RADIANCE, a Green Software Engineering tool currently in a <i><u style="">BETA</u></i> state</h5> <ul><li>RADIANCE allows you to <u>design</u> the architecture and describe behavior of software using your previous knowledge, such as UML and programming-related concepts.</li> <li>The <b>objective</b> of this test is for the testers to decide if our <u style="color:darkgreen">green</u> features make you more aware of how certain software characteristics affect its energy consumption.</li><li> RADIANCE' + "'s" + ' <u style="color:darkgreen">green</u> features:<ul><li>Categorize from A to G the functions you declare by using a custom algorithm.<li>Rate the prospective consumption of the execution of your software model.</li><li>Create a report with advice on what choices can make the final software more efficient.</li></ul></ul>' + warning + 'The tutorial and its following questionnare will only take 10 minutes. Click "OK" to begin.</div>';
+    let introduction = '<div class="" style="font-family: Roboto;"><h5 style="text-align:center;">Welcome to the usability test of RADIANCE, a Green Software Engineering tool currently in a <i><u style="">BETA</u></i> state</h5> <ul><li>RADIANCE allows you to <u>design</u> the architecture and describe the behavior of software using your previous knowledge, such as UML and programming-related concepts.</li> <li>The <b>objective</b> of this test is for the testers to decide if our <u style="color:darkgreen">green</u> features make you more aware of how certain software characteristics affect its energy consumption.</li><li> RADIANCE' + "'s" + ' <u style="color:darkgreen">green</u> features:<ul><li>Categorize from A to G the functions you declare by using a custom algorithm.<li>Rate the prospective consumption of the execution of your software model.</li><li>Create a report with advice on what choices can make the final software more efficient.</li></ul></ul>' + warning + 'The tutorial and its following questionnare will only take 10 minutes. Click "OK" to begin.</div>';
 
 
 
@@ -727,7 +753,7 @@ function loadSample() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do. (Attention: functions/methods are called operations in some places).',
+                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
                 position: 'left',
                 callback: {
                     fn: () => {
@@ -779,6 +805,7 @@ function loadSample() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 10;
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
                     }
 
                 }
@@ -792,13 +819,14 @@ function loadSample() {
                     fn: () => {
                         this.tutorial_step = 11;
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
+                        
                     }
                 }
             },
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'There are 3 types of triggers: parameters, a hypothetical model state, and another function.',
+                text: 'There are 3 types of triggers: parameters, the start or the end of a model, and another function.',
                 position: "right",
 
                 callback: {
@@ -806,6 +834,7 @@ function loadSample() {
                         this.tutorial_step = 12;
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
@@ -829,7 +858,7 @@ function loadSample() {
             {
                 highlight: "#model_sequencer_column",
 
-                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "run" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
+                text: 'The rest of the triggers are edited in the "Triggers" section. When you trigger by state, the "Start" option means that the function will run in the beginning when a model is, figuratively, active. It is a good idea to create this trigger in the beginning of every model. ',
                 position: "right",
 
                 callback: {
@@ -842,10 +871,12 @@ function loadSample() {
             },
             {
                 highlight: "#plantuml_builder_flow",
-                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. After the tutorial, you can click on "pop-out" to view it in another tab.',
+                text: 'As you define functions and messages, a sequence diagram is automatically generated to help you understand the flow of the functions. Click on next to see the sequence diagram popped out and then come back.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        setTimeout(() => {
+                        popups_manager.openWindow('sequence');},500);
                         this.tutorial_step = 15;
                         document.getElementById('run_algorithm_button').classList.add('attention');
                     }
@@ -868,7 +899,7 @@ function loadSample() {
             },
             {
                 highlight: '#radiance_logo_top',
-                text: 'You will find advice according to your model' + "'" + 's characteristics in the highlights section. They are things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
+                text: 'The highlights in the report are the things you should keep in mind to reduce the energy footprint of your sotfware in the next stages after the design and analysis.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -879,10 +910,11 @@ function loadSample() {
             },
             {
                 highlight: '#plantuml_builder_timing',
-                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are all executed in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function.',
+                text: 'Now that the functions are classified, a step diagram is generated. The step diagram indicates the sequence in which your functions are triggered, with support for parallelism. A function triggered by another function will be "executed" simultaneously with the function that triggered it. For instance, the functions in step 3 are activated in parallel. The colors represent the rating of the "step" (point of the sequence), and they depend on the definition of each function. Click on next to see the step diagram popped out and then come back.',
                 position: 'left',
                 callback: {
                     fn: () => {
+                        setTimeout(() => {popups_manager.openWindow('timing');},500);
                         this.tutorial_step = 18;
                         document.getElementById('questionnare_button').style.visibility = "";
                         
@@ -896,6 +928,7 @@ function loadSample() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 19;
+                        this.tutorial_finished_once = true;
                         let project = atob(tutorial_64);
                         //we load the project from the variable tutorial_64 in the file 
                         this.db = JSON.parse(project);
