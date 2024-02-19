@@ -121,7 +121,7 @@ animation: draw-attention 3s ease-in-out infinite !important;
   padding-bottom: 10px;
   scroll-behavior: smooth;
   border: 1px 0px 0px 0px;
-  z-index: 3;
+  
   margin-left: 10px;
 
 }
@@ -138,7 +138,7 @@ animation: draw-attention 3s ease-in-out infinite !important;
   padding-bottom: 10px;
   scroll-behavior: smooth;
   border: 1px 0px 0px 0px;
-  z-index: 3;
+  z-index: 2;
   margin-left: 10px;
 
 }
