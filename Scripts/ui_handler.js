@@ -1,6 +1,6 @@
 //this listener is responsible for updating the UI each time a schema is loaded
 var from;
-var audio = true;
+var audio = false;
 var load_schema_button = document.getElementById('load_schema_button');
 var element_to_edit = new Object();
 var temporal_selection = "";
@@ -20,6 +20,8 @@ var inheritance_diagram;
 var inheritance_diagram_two_objects = new Object();
 var inheritance_diagram_branches = new Object();
 var tutorial_step = 0;
+var milestones_guide = false;
+var timing_diagram;
 
 //this section if for adding things to the html toolbox
 var add_code_execution = { name: "Trigger code", content: 'onClick="executeCustomCode(' + "'" + 'variableName_reserved_code' + "'" + ')"', notes: '' };
@@ -52,7 +54,8 @@ var tutorial_step = localStorage.getItem('tutorial_progress');
 var notify_tutorial_exit_once = false;
 var introductory_modal_open = true;
 var mytutorial;
-var tutorial_finished_once= false;
+var tutorial_finished_once = false;
+var test_finished_once = false;
 
 //The tutorial for this release
 
@@ -74,7 +77,7 @@ class externalTrigger {
 }
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         console.log('Clicked Element:', event.target);
     });
 
@@ -209,14 +212,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         db[exists.route].push(object_to_load);
                         updateLocalStorage();
                         $('#load_library_modal').modal('hide');
-                        alertify.success(type_to_load + " successfully loaded");
+                        //alertify.success(type_to_load + " successfully loaded");
                     } else {
 
                         //store the new profile/schema/whatever
                         db[exists.route].push(object_to_load);
                         updateLocalStorage();
                         $('#load_library_modal').modal('hide');
-                        alertify.success(type_to_load + " successfully loaded");
+                        //alertify.success(type_to_load + " successfully loaded");
                     }
                 }
 
@@ -258,32 +261,78 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     setInterval(function () {
         // call your function here
-        if(this.element_to_edit.element_id != 887770500712&& parseInt(localStorage.getItem('tutorial_progress')) < 18 && localStorage.getItem('tutorial_progress')>=9 && this.tutorial_finished_once == false){
+        if (this.element_to_edit.element_id != 887770500712 && parseInt(localStorage.getItem('tutorial_progress')) < 18 && localStorage.getItem('tutorial_progress') >= 9 && this.tutorial_finished_once == false) {
             this.db = JSON.parse(atob(sample_profile_64));
             updateLocalStorage();
             setBuilderSelection('profile', 887770500712);
             document.getElementById('_15_parent_header').parentElement.click();
-            setTimeout(() => {mytutorial.goToStep(localStorage.getItem('tutorial_progress')); }, 1000);
+            setTimeout(() => { mytutorial.goToStep(localStorage.getItem('tutorial_progress')); }, 1000);
         }
         if (document.getElementsByClassName('tutorial-box')[0] == null) {
             document.getElementById('tutorial_row_tools').style.visibility = '';
-            if(tutorial_finished_once == true){
+            if (tutorial_finished_once == true) {
                 //we remove the option to resume the tutorial
-                
-                document.getElementById('resume_tutorial').style.visibility = 'hidden';    
+
+                document.getElementById('resume_tutorial').style.visibility = 'hidden';
                 document.getElementById('resume_tutorial').parentElement.classList.remove('col');
                 document.getElementById('resume_tutorial').parentElement.style.display = 'none';
+
+                //invoke into view the tips for the user
+                document.getElementById('tutorial_row_guide').style.visibility = '';
+                //guide the user to the milestones
+                if (this.milestones_guide == false) {
+                    this.milestones_guide = true;
+                    setTimeout(() => {
+                        var line2 = new LeaderLine(
+                            document.getElementById('review_instructions'),
+                            document.getElementById('tutorial_row_guide'), {
+                                middleLabel: LeaderLine.pathLabel('You can track your progress here'), dash: { animation: true }, startPlugColor: '#63b00b',
+                            color: '#63b00b',
+                            endPlugColor: '#63b00b', endPlug: 'hand'
+                        });
+
+                        setTimeout(() => {
+                            line2.remove();
+
+                        }, 15000)
+
+                    }, 1000);
+                    //Check each milestone of the tutorial
+
+                }
+            //review the test milestones
+            let operations_ready = this.available_parents[findPlaceByParentName('Operations',this.available_parents)][4].length;
+            //update the counter
+            document.getElementById('test_operations_number').innerText = operations_ready; 
+            //check triggers_ready
+            let triggers_ready = this.available_parents[findPlaceByParentName('Triggers',this.available_parents)][4].length;
+            document.getElementById('test_triggers_number').innerText = triggers_ready;
+            //check messages ready
+            let messages_ready = this.available_parents[findPlaceByParentName('Results',this.available_parents)][4].length;
+            document.getElementById('test_messages_number').innerText = messages_ready;
+
+            let parameters_ready = this.available_parents[findPlaceByParentName('Parameters',this.available_parents)][4].length;
+                document.getElementById('test_parameters_number').innerText = parameters_ready;
+if(test_finished_once == false){
+                if(operations_ready == 4 && triggers_ready == 4 && messages_ready == 2 && parameters_ready == 2){
+                    this.test_finished_once = true;
+                    document.getElementById('tutorial_row_guide').classList.add('attention');
+                    setOpacity(1,'tutorial_row_guide');
+                    alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">','Congratulations you declared all the elements needed for the test. You can now proceed to the next stage by clicking on the "Rate model" button.');
+                    document.getElementById('tutorial_row_guide').innerHTML+='<div class="col-12 report_highlight_advice"><h6 style="font-size:small">The same results could be achieved with a different amount of instances. Modeling is a creative approach with no specific answer.</h6></div>'
+                }
             }
-            
+            }
+
             console.log("Tutorial state: \n" + "Last tutorial step: " + this.tutorial_step + "\n" + "Introductory modal visible: " + introductory_modal_open + "\n" + "Notified the user of tutorial exit:" + this.notify_tutorial_exit_once);
-            if (this.tutorial_step < 18 && this.tutorial_step>=9) {
+            if (this.tutorial_step < 18 && this.tutorial_step >= 9) {
                 //the user stepped out of the tutorial
                 if (this.notify_tutorial_exit_once == false && introductory_modal_open == false && tutorial_step < 19) {
                     alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'You just exited the tutorial, click on the "Resume tutorial" button located in the bottom left corner if you wish to resume it.');
                     document.getElementsByClassName('ajs-dimmer')[0].style.opacity = '0';
                     this.notify_tutorial_exit_once = true;
                 }
-               
+
 
             }
         } else {
@@ -334,7 +383,7 @@ function resumeTutorial() {
             {
                 highlight: "#available_parents",
 
-                text: 'There are three main categories inside of a model: Model characteristics, Functions/methods and Parameters. ',
+                text: 'There are three main categories inside a model: Model characteristics, Functions/methods and Parameters. ',
                 position: 'right',
                 callback: {
                     fn: () => {
@@ -385,7 +434,7 @@ function resumeTutorial() {
             {
                 highlight: "#available_children_area",
 
-                text: 'What you see here are the instances of the Functions/Models you have created, each one has their own name and their own characteristics. When you click on one, its properties are shown to you. Click on "Next".',
+                text: 'What you see here are the instances of the Functions/Models you have created. Each one has their own name and characteristics. When you click on one, its properties are shown to you. Click on "Next".',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -401,7 +450,7 @@ function resumeTutorial() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
+                text: 'You will see properties inside different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
                 position: 'left',
                 callback: {
                     fn: () => {
@@ -453,7 +502,7 @@ function resumeTutorial() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 10;
-                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click();
                     }
 
                 }
@@ -467,7 +516,7 @@ function resumeTutorial() {
                     fn: () => {
                         this.tutorial_step = 11;
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
-                        
+
                     }
                 }
             },
@@ -482,7 +531,7 @@ function resumeTutorial() {
                         this.tutorial_step = 12;
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click();
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
@@ -524,7 +573,8 @@ function resumeTutorial() {
                 callback: {
                     fn: () => {
                         setTimeout(() => {
-                        popups_manager.openWindow('sequence');},500);
+                            popups_manager.openWindow('sequence');
+                        }, 500);
                         this.tutorial_step = 15;
                         document.getElementById('run_algorithm_button').classList.add('attention');
                     }
@@ -563,10 +613,11 @@ function resumeTutorial() {
                 callback: {
                     fn: () => {
                         setTimeout(() => {
-                        popups_manager.openWindow('timing');},500);
+                            popups_manager.openWindow('timing');
+                        }, 500);
                         this.tutorial_step = 18;
                         document.getElementById('questionnare_button').style.visibility = "";
-                        
+
                     }
                 }
             },
@@ -585,24 +636,24 @@ function resumeTutorial() {
                         updateLocalStorage();
                         setBuilderSelection('profile', 1601203758668);
                         menuSelection('builder');
-                        setTimeout(() => { var line = new LeaderLine(
-                            document.getElementById('radiance_logo_top'),
-                            document.getElementById('review_instructions'),{middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'),dash: {animation: true},startPlugColor: '#63b00b',
-                            color: '#63b00b',
-                            endPlugColor: '#63b00b',endPlug: 'hand'}
-        
-                        );
+                        setTimeout(() => {
+                            var line = new LeaderLine(
+                                document.getElementById('radiance_logo_top'),
+                                document.getElementById('review_instructions'), {
+                                    middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
+                                color: '#63b00b',
+                                endPlugColor: '#63b00b', endPlug: 'hand'
+                            });
 
-                        setTimeout(()=>{
-                            line.remove();
-                            
-                        },15000)
-                    
-                    }, 1000);
-                        
+                            setTimeout(() => {
+                                line.remove();
+
+                            }, 15000)
+
+                        }, 1000);
 
 
-                        
+
 
 
                     }
@@ -622,12 +673,12 @@ function resumeTutorial() {
     });
     mytutorial.start();
     mytutorial.goToStep(this.tutorial_step);
-    
-    setTimeout(()=>{
+
+    setTimeout(() => {
         document.getElementsByClassName('tutorial-buttons')[0].childNodes[2].childNodes[1].click();
-        
-    },500)
-    
+
+    }, 500)
+
 
 
 }
@@ -686,7 +737,7 @@ function loadSample() {
             {
                 highlight: "#available_parents",
 
-                text: 'There are three main categories inside of a model: Model characteristics, Functions/methods and Parameters. ',
+                text: 'There are three main categories inside a model: Model characteristics, Functions/methods and Parameters. ',
                 position: 'right',
                 callback: {
                     fn: () => {
@@ -737,7 +788,7 @@ function loadSample() {
             {
                 highlight: "#available_children_area",
 
-                text: 'What you see here are the instances of the Functions/Models you have created, each one has their own name and their own characteristics. When you click on one, its properties are shown to you. Click on "Next".',
+                text: 'What you see here are the instances of the Functions/Models you have created. Each one has their own name and characteristics. When you click on one, its properties are shown to you. Click on "Next".',
                 position: 'bottom',
                 callback: {
                     fn: () => {
@@ -753,7 +804,7 @@ function loadSample() {
             {
                 highlight: "#available_variables_area",
 
-                text: 'You will see properties inside of different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
+                text: 'You will see properties inside different categories that correspond to the nature of the function: hardware consumption and their handling of data among others. After this tutorial, you will be free to select whichever value you think that conforms the best to what the function or method will do.',
                 position: 'left',
                 callback: {
                     fn: () => {
@@ -805,7 +856,7 @@ function loadSample() {
                 callback: {
                     fn: () => {
                         this.tutorial_step = 10;
-                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click();
                     }
 
                 }
@@ -819,7 +870,7 @@ function loadSample() {
                     fn: () => {
                         this.tutorial_step = 11;
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
-                        
+
                     }
                 }
             },
@@ -834,7 +885,7 @@ function loadSample() {
                         this.tutorial_step = 12;
                         //document.getElementById('results_sequencer_rules').parentNode.parentNode.previousSibling.nextElementSibling.previousElementSibling.children[0].click();
                         document.getElementById('results_sequencer_rules').parentElement.parentElement.previousElementSibling.classList.add('attention');
-                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click(); 
+                        document.getElementById('model_sequencer_id').childNodes[5].childNodes[1].children[0].children[0].childNodes[1].click();
                         setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].style.top = '-60px'; setTimeout(() => { document.getElementsByClassName('tutorial-box')[0].scrollIntoView({ behavior: "smooth" }); }, 500); }, 1000);
                     }
                 }
@@ -876,7 +927,8 @@ function loadSample() {
                 callback: {
                     fn: () => {
                         setTimeout(() => {
-                        popups_manager.openWindow('sequence');},500);
+                            popups_manager.openWindow('sequence');
+                        }, 500);
                         this.tutorial_step = 15;
                         document.getElementById('run_algorithm_button').classList.add('attention');
                     }
@@ -914,10 +966,10 @@ function loadSample() {
                 position: 'left',
                 callback: {
                     fn: () => {
-                        setTimeout(() => {popups_manager.openWindow('timing');},500);
+                        setTimeout(() => { popups_manager.openWindow('timing'); }, 500);
                         this.tutorial_step = 18;
                         document.getElementById('questionnare_button').style.visibility = "";
-                        
+
                     }
                 }
             },
@@ -936,24 +988,27 @@ function loadSample() {
                         updateLocalStorage();
                         setBuilderSelection('profile', 1601203758668);
                         menuSelection('builder');
-                        setTimeout(() => { var line = new LeaderLine(
-                            document.getElementById('radiance_logo_top'),
-                            document.getElementById('review_instructions'),{middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'),dash: {animation: true},startPlugColor: '#63b00b',
-                            color: '#63b00b',
-                            endPlugColor: '#63b00b',endPlug: 'hand'}
-        
-                        );
+                        setTimeout(() => {
+                            var line = new LeaderLine(
+                                document.getElementById('radiance_logo_top'),
+                                document.getElementById('review_instructions'), {
+                                    middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
+                                color: '#63b00b',
+                                endPlugColor: '#63b00b', endPlug: 'hand'
+                            }
 
-                        setTimeout(()=>{
-                            line.remove();
-                            
-                        },10000)
-                    
-                    }, 1000);
-                        
+                            );
+
+                            setTimeout(() => {
+                                line.remove();
+
+                            }, 10000)
+
+                        }, 1000);
 
 
-                        
+
+
 
 
                     }
@@ -2957,6 +3012,7 @@ function reasonerPlantumlDiagram(type) {
                 //console.log("right: "+right);
                 console.log("parameters: " + JSON.stringify(parameters) + " searching for " + new_result.parameter);
                 let arg = getParameter(parameters, new_result.parameter);
+                console.log("arg: " + JSON.stringify(arg));
                 let origin = arg.origin;
 
 
@@ -4043,3 +4099,7 @@ function interpreterInitialization() {
     runPlotInitialization()//interpreter_engine.js
 }
 
+function setOpacity(amount, dom) {
+    dom = document.getElementById(dom);
+    dom.style.opacity = amount;
+}

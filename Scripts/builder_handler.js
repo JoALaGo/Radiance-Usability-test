@@ -110,10 +110,36 @@ function prepareConfigurationForUi() {
         //the memory is ready, passing the task of presenting it in the front end to the ui_handler
         fillBuilderUi();
         reasonerPlantumlDiagram('sequence');
+        reasonerPlantumlDiagram('timing');
 
     }
 
 
+}
+
+
+function initTimingDiagram(root_profile) {
+
+    let profile;
+    if (root_profile == null || root_profile == '') {
+        profile = this.available_parents;
+    } else {
+        profile = root_profile;
+    }
+
+    //we initialize all the operations as robust
+    let init = '\n <style>\n    timingDiagram {\n      .red {\n        LineColor red\n      }\n      .blue {\n        LineColor blue\n        LineThickness 3\n      }\n    }\n</style>\n scale 1 as 200 pixels';
+    timing_diagram += init;
+    let operations = profile[findPlaceByParentName('Operations', profile)][4];
+
+    for (let x in operations) {
+        timing_diagram += '\nrobust "' + operations[x].Name + '" as ' + operations[x].Name.split(' ').join('') + ' <' + '<' + 'blue' + '>' + '>';
+    }
+
+    timing_diagram += '\n @0';
+    for (let x in operations) {
+        timing_diagram += '\n' + operations[x].Name.split(' ').join('') + ' is Off';
+    }
 }
 
 
@@ -1022,6 +1048,7 @@ function createInstanceFromProfileElement(library_id, dom_target, parent_index, 
     saveInstanceCache();
     updateLocalStorage();
     sequencerRulesReasoner();
+    reasonerPlantumlDiagram('timing');
 }
 //inner variables es un array con objetos dentro
 
