@@ -361,7 +361,7 @@ function resumeTutorial() {
 
                 highlight: "#radiance_logo_top",
 
-                text: 'Before we continue: you can skip to any step you want using the progress bar below.',
+                text: 'Before we continue: you can skip to any step you want using the progress bar below. If you click outside of the tutorial box, it will close.',
                 position: 'bottom',
                 callback: {
                     fn: () => {
