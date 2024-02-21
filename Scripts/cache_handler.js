@@ -583,6 +583,11 @@ function saveInstanceCache() {
     //run the algorithm so that the ratings stay up to date
     updateLocalStorage();
     reasonerPlantumlDiagram('sequence');
+
+    setTimeout(() => {   
+        timingDiagramDraft();
+     },500);
+ 
 }
 
 

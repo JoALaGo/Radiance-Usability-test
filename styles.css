@@ -308,6 +308,29 @@ button:not(.collapsed)::after {
   margin-right: 0px;
   margin-right: 0px !important;
 }
+@keyframes draw-bad-attention {
+
+  0%   { box-shadow: 0 0 0 rgb(156, 5, 5); }
+  50%  { box-shadow: 0 0 17px rgb(156, 5, 5); }
+  100% { box-shadow: 0 0 0 rgb(156, 156, 5); }
+}
+
+.warning{
+  height: 25px;
+  width: 25px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  color: red;
+  border-style: outset;
+  font-size: small !important;
+  text-align: center;
+  font-weight: bold;
+  
+}
+.bad-attention{
+  animation: draw-bad-attention 3s ease-in-out infinite !important;
+}
 
 .teacher_variable {
   font-family: 'Roboto';

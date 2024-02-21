@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         var line2 = new LeaderLine(
                             document.getElementById('review_instructions'),
                             document.getElementById('tutorial_row_guide'), {
-                                middleLabel: LeaderLine.pathLabel('You can track your progress here'), dash: { animation: true }, startPlugColor: '#63b00b',
+                            middleLabel: LeaderLine.pathLabel('You can track your progress here'), dash: { animation: true }, startPlugColor: '#63b00b',
                             color: '#63b00b',
                             endPlugColor: '#63b00b', endPlug: 'hand'
                         });
@@ -300,28 +300,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     //Check each milestone of the tutorial
 
                 }
-            //review the test milestones
-            let operations_ready = this.available_parents[findPlaceByParentName('Operations',this.available_parents)][4].length;
-            //update the counter
-            document.getElementById('test_operations_number').innerText = operations_ready; 
-            //check triggers_ready
-            let triggers_ready = this.available_parents[findPlaceByParentName('Triggers',this.available_parents)][4].length;
-            document.getElementById('test_triggers_number').innerText = triggers_ready;
-            //check messages ready
-            let messages_ready = this.available_parents[findPlaceByParentName('Results',this.available_parents)][4].length;
-            document.getElementById('test_messages_number').innerText = messages_ready;
+                //review the test milestones
+                let operations_ready = this.available_parents[findPlaceByParentName('Operations', this.available_parents)][4].length;
+                //update the counter
+                document.getElementById('test_operations_number').innerText = operations_ready;
+                //check triggers_ready
+                let triggers_ready = this.available_parents[findPlaceByParentName('Triggers', this.available_parents)][4].length;
+                document.getElementById('test_triggers_number').innerText = triggers_ready;
+                //check messages ready
+                let messages_ready = this.available_parents[findPlaceByParentName('Results', this.available_parents)][4].length;
+                document.getElementById('test_messages_number').innerText = messages_ready;
 
-            let parameters_ready = this.available_parents[findPlaceByParentName('Parameters',this.available_parents)][4].length;
+                let parameters_ready = this.available_parents[findPlaceByParentName('Parameters', this.available_parents)][4].length;
                 document.getElementById('test_parameters_number').innerText = parameters_ready;
-if(test_finished_once == false){
-                if(operations_ready == 4 && triggers_ready == 4 && messages_ready == 2 && parameters_ready == 2){
-                    this.test_finished_once = true;
-                    document.getElementById('tutorial_row_guide').classList.add('attention');
-                    setOpacity(1,'tutorial_row_guide');
-                    alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">','Congratulations you declared all the elements needed for the test. You can now proceed to the next stage by clicking on the "Rate model" button.');
-                    document.getElementById('tutorial_row_guide').innerHTML+='<div class="col-12 report_highlight_advice"><h6 style="font-size:small">The same results could be achieved with a different amount of instances. Modeling is a creative approach with no specific answer.</h6></div>'
+                if (test_finished_once == false) {
+                    if (operations_ready == 4 && triggers_ready == 4 && messages_ready == 2 && parameters_ready == 2) {
+                        this.test_finished_once = true;
+                        document.getElementById('tutorial_row_guide').classList.add('attention');
+                        setOpacity(1, 'tutorial_row_guide');
+                        alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'Congratulations you declared all the elements needed for the test. You can now proceed to the next stage by clicking on the "Rate model" button.');
+                        document.getElementById('tutorial_row_guide').innerHTML += '<div class="col-12 report_highlight_advice"><h6 style="font-size:small">The same results could be achieved with a different amount of instances. Modeling is a creative approach with no specific answer.</h6></div>'
+                    }
                 }
-            }
             }
 
             console.log("Tutorial state: \n" + "Last tutorial step: " + this.tutorial_step + "\n" + "Introductory modal visible: " + introductory_modal_open + "\n" + "Notified the user of tutorial exit:" + this.notify_tutorial_exit_once);
@@ -640,7 +640,7 @@ function resumeTutorial() {
                             var line = new LeaderLine(
                                 document.getElementById('radiance_logo_top'),
                                 document.getElementById('review_instructions'), {
-                                    middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
+                                middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
                                 color: '#63b00b',
                                 endPlugColor: '#63b00b', endPlug: 'hand'
                             });
@@ -992,7 +992,7 @@ function loadSample() {
                             var line = new LeaderLine(
                                 document.getElementById('radiance_logo_top'),
                                 document.getElementById('review_instructions'), {
-                                    middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
+                                middleLabel: LeaderLine.pathLabel('Click here to view the test instructions'), dash: { animation: true }, startPlugColor: '#63b00b',
                                 color: '#63b00b',
                                 endPlugColor: '#63b00b', endPlug: 'hand'
                             }
@@ -2922,7 +2922,15 @@ function reasonerPlantumlDiagram(type) {
             db['sequence_preview_data'] = sequence_string;
             updateLocalStorage();
             document.getElementById("plantuml_builder_flow").innerHTML += '<img class="img-fluid" uml="' + sequence_string + '">';
-            document.getElementById("plantuml_builder_timing").innerHTML += '<img class="img-fluid" ' + "uml='" + db.timing_diagram + "'" + '>';
+            if (db.timing_diagram == null || db.timing_diagram == '') {
+
+                setTimeout(() => {
+                    timingDiagramDraft();
+                }, 2000);
+
+            } else {
+                document.getElementById("plantuml_builder_timing").innerHTML += '<img class="img-fluid" ' + "uml='" + db.timing_diagram + "'" + '>';
+            }
             plantuml_runonce();
 
 
@@ -3113,10 +3121,35 @@ function reasonerPlantumlDiagram(type) {
             }
 
         }
+        document.getElementById('sequence_diagram_error').style.display = 'none';
+        document.getElementById('timing_diagram_error').style.display = 'none';
 
     } catch (error) {
-        //  console.log('%cPlantuml error... but it might not be important: '+error, 'color:red');
+        // there was an error building the plantuml diagrams, reload the ones in the db
+        //we show the warnings to the user
+        document.getElementById('sequence_diagram_error').style.display = 'block';
+        document.getElementById('timing_diagram_error').style.display = 'block';
+        let timing_dom = document.getElementById("plantuml_builder_timing");
+        let sequence_dom = document.getElementById("plantuml_builder_flow");
+        timing_dom.innerHTML = '';
+        sequence_dom.innerHTML = '';
+        // the timing diagram could not be ready yet in the UI (the user has not rated the profile yet), generate it.
+        if (this.db.timing_diagram == null || this.db.timing_diagram == '') {
+            console.log("THERE WAS NO TIMING DIAGRAM AVAILABLE, GENERATING ONE NOW.");
+            timingDiagramDraft(); // the time diagram is generated here and available in the this.timing_diagram_draft GLOBAL variable
+            timing_dom.innerHTML += `<img class="img-fluid" uml='${this.db.timing_diagram}'>`;
+        } else {
+            timing_dom.innerHTML += `<img class="img-fluid" uml='${this.db.timing_diagram}'>`;
+        }
+        //FOR SOME WEIRD REASON, THE SEQUENCE DIAGRAM AND THE TIMING DIAGRAM ARE FLIPPED WHEN CALLING PLANTUML_RUNONCE ONCE, SO WE CALL IT TWICE... SO SORRY PLANTUML.
+        sequence_dom.innerHTML += `<img class="img-fluid" uml='${this.db.sequence_preview_data}'>`;
+        setTimeout(() => {
+            plantuml_runonce();
+        }, 500)
+
+
     }
+
 
 }
 

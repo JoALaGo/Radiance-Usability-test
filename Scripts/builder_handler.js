@@ -12,6 +12,7 @@ var available_parents = [];
 var available_objects = [];
 var sequencer_existing_rules = [];
 var consumption_guide;
+var timing_diagram_draft='';
 
 function builderInitialization() {
 
@@ -85,7 +86,7 @@ function prepareConfigurationForUi() {
 
         fillBuilderUi();
         reasonerPlantumlDiagram('sequence');
-        reasonerPlantumlDiagram('timing');
+
     } else {
         let place_in_storage = findInstancePlaceInStorage("profile", element_to_edit.element_id);
         if (db.profile_Array[place_in_storage].hasOwnProperty("profile_cache")) {
@@ -110,7 +111,7 @@ function prepareConfigurationForUi() {
         //the memory is ready, passing the task of presenting it in the front end to the ui_handler
         fillBuilderUi();
         reasonerPlantumlDiagram('sequence');
-        reasonerPlantumlDiagram('timing');
+
 
     }
 
@@ -146,11 +147,11 @@ function initTimingDiagram(root_profile) {
 function setBuilderSelection(type, selectionid) {
     cleanAllLines();
     $('#builder_element_selection_modal').modal('hide');
-    this.element_id= new Object();
+    this.element_id = new Object();
     Object.assign(this.element_to_edit, db[type + "_Array"][findInstancePlaceInStorage(type, selectionid)]);//copy the object
     //get the consumption guide and assign it to the global variable
-    if(this.element_to_edit.hasOwnProperty('consumption_guide')){
-    this.consumption_guide = JSON.parse(db.profile_Array[findInstancePlaceInStorage('profile', this.element_to_edit.consumption_guide)].profile_cache);
+    if (this.element_to_edit.hasOwnProperty('consumption_guide')) {
+        this.consumption_guide = JSON.parse(db.profile_Array[findInstancePlaceInStorage('profile', this.element_to_edit.consumption_guide)].profile_cache);
     }
 
     console.log(from + " selected " + this.element_to_edit.element_id);
@@ -159,7 +160,7 @@ function setBuilderSelection(type, selectionid) {
     builderInitialization();
     //INITIALIZE THE GUIDE
     populateGuides();
-    
+
 }
 
 function builderConfigurationInitializer() {
@@ -837,7 +838,7 @@ function getChildrenChain(starting_element, children_chain) {
 
 function saveRawPropertyValue(parent_index, input_id, property_name, is_variable_subset, is_instance, type, instance_id, is_custom, subset_name, custom_value) {
     console.log("saveRawPropertyValue<Value received: " + custom_value + "instance id: " + instance_id + ">");
-   
+
     if (!is_instance) {
         let input_value
         if (is_custom) {
@@ -849,7 +850,7 @@ function saveRawPropertyValue(parent_index, input_id, property_name, is_variable
         let properties = this.available_parents[parent_index][1];
         properties[property_name] = input_value.valueOf();//javscript is so cool we can diretly reference an object's property using a string. :) I LOVE IT!
         alertify.success('Succesfully saved the new value for ' + property_name.split('_').join(' '));
-        
+
         //if something changes, we have to alert the user to run the algorithm again
 
         let run_algorithm_button = document.getElementById('run_algorithm_button');
@@ -863,10 +864,10 @@ function saveRawPropertyValue(parent_index, input_id, property_name, is_variable
         let input_value;
         if (is_custom) {
 
-             //if something changes, we have to alert the user to run the algorithm again
+            //if something changes, we have to alert the user to run the algorithm again
 
-        let run_algorithm_button = document.getElementById('run_algorithm_button');
-        run_algorithm_button.classList.add('attention');
+            let run_algorithm_button = document.getElementById('run_algorithm_button');
+            run_algorithm_button.classList.add('attention');
             input_value = custom_value;
             //if there is a custom value, there could also be a custom subset name. We have to get the original subset name to properly save the value to the correct sub-set.
             //I have to enter the configuration to find if a subset has the same name as the subset name received by this function
@@ -1045,10 +1046,41 @@ function createInstanceFromProfileElement(library_id, dom_target, parent_index, 
 
     }
 
+    //we re-open the dom we closed by adding an instance and then scroll into view the latest instance
+    if (parent_index == 20 && self_index == 23) {
+        setTimeout(() => {
+
+            //re-open the dom
+
+            document.getElementById('results_sequencer_rules').parentElement.parentElement.classList.add('show');
+            //scroll down the latest element
+            let latest = document.getElementById('results_sequencer_rules').children[document.getElementById('results_sequencer_rules').children.length - 1];
+
+            setTimeout(() => {
+                document.getElementById('results_sequencer_rules').scrollIntoView(latest);
+            }, 200);
+        }, 700);
+    } else if (parent_index == 20 && self_index == 22) {
+        setTimeout(() => {
+
+            //re-open the dom
+            document.getElementById('triggers_sequencer_rules').parentElement.parentElement.classList.add('show');
+            //scroll down the latest element
+            let latest = document.getElementById('triggers_sequencer_rules').children[document.getElementById('results_sequencer_rules').children.length - 1];
+
+            setTimeout(() => {
+                document.getElementById('triggers_sequencer_rules').scrollIntoView(latest);
+            }, 200);
+        }, 700);
+    }
     saveInstanceCache();
     updateLocalStorage();
     sequencerRulesReasoner();
     reasonerPlantumlDiagram('timing');
+    setTimeout(() => {   
+        timingDiagramDraft();
+     },500);
+ 
 }
 //inner variables es un array con objetos dentro
 
@@ -1153,10 +1185,10 @@ function saveRawInstanceEdition(dom_target, property_name, parent_index, instanc
     instance[property_name] = new_value.valueOf();
     console.log("property value found: " + instance[property_name]);
     //if the builder is visible, refresh the operations.
-    if(document.getElementById('_15_parent_header')!=null && parent_index == 15){
+    if (document.getElementById('_15_parent_header') != null && parent_index == 15) {
         document.getElementById('_15_parent_header').parentElement.click();
 
-    }else if(document.getElementById('_15_parent_header')!=null && parent_index == 19){
+    } else if (document.getElementById('_15_parent_header') != null && parent_index == 19) {
         document.getElementById('_19_parent_header').parentElement.click();
     }
     saveInstanceCache();
@@ -1202,6 +1234,7 @@ function deleteInstance(parent_index, self_index, id) {
         fillBuilderUi();
         sequencerRulesReasoner();
         playSound('delete');
+        timingDiagramDraft();
         return null;
 
 
@@ -1215,6 +1248,7 @@ function deleteInstance(parent_index, self_index, id) {
             fillBuilderUi();
             sequencerRulesReasoner();
             playSound('delete');
+            timingDiagramDraft();
             return null;
         }
 
@@ -1232,17 +1266,17 @@ function runBuilderAlgorithm() {
     run_algorithm_button.classList.remove('attention');
 
     saveToStorage('profile_builder_algorithm');
-    if(this.db.builder_algorithm!==null&&this.db.builder_algorithm!==''){
+    if (this.db.builder_algorithm !== null && this.db.builder_algorithm !== '') {
         try {
             eval(this.db.builder_algorithm);
         } catch (error) {
-            console.log('There was an error attempting to execute the algorithm on startup: '+error);
+            console.log('There was an error attempting to execute the algorithm on startup: ' + error);
             console.log(JSON.stringify(error));
-            alertify.alert('Algorithm execution error','The following error was encountered during the execution of the rating algorithm: \n'+error);
+            alertify.alert('Algorithm execution error', 'The following error was encountered during the execution of the rating algorithm: \n' + error);
         }
-       
+
     }
-    
+
 }
 
 
@@ -1285,7 +1319,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
 
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success('+"'Trigger or message updated succesfully'"+')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule" style=""> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(23,23,' + results_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-middle" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success(' + "'Trigger or message updated succesfully'" + ')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success(' + "'Trigger or message updated succesfully'" + ')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ');alertify.success(' + "'Trigger or message updated succesfully'" + ')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule" style=""> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(23,23,' + results_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-middle" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(23,' + results_instances[x].inner_id + ',' + id + ',' + "'" + 'result' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             let document_result_origin = document.getElementById(id + '_origin');
             let document_result_parameter = document.getElementById(id + '_parameter');
@@ -1334,7 +1368,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
 
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success('+"'Dependency successfully updated'"+')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(21,21,' + dependencies_instances[x].inner_id + ' ,false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none" > <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success(' + "'Dependency successfully updated'" + ')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="parameter" id="' + id + '_parameter" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success(' + "'Dependency successfully updated'" + ')"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination" onchange="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + '); alertify.success(' + "'Dependency successfully updated'" + ')"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"> <a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(21,21,' + dependencies_instances[x].inner_id + ' ,false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a> </div> <div class="col-6 rule" style="display:none" > <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(21,' + dependencies_instances[x].inner_id + ',' + id + ',' + "'" + 'dependency' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             var document_result_origin = document.getElementById(id + '_origin');
             var document_result_relationship_type = document.getElementById(id + '_parameter');
@@ -1395,7 +1429,7 @@ function sequencerRulesReasoner(array) {
             id += Math.floor(Math.random() * 100);
             id += Math.floor(Math.random() * 100);
             ids.push(id);
-            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success('+"'Trigger updated succesfully'"+');"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"></img> </div> </div> </div> </div> </div>';
+            document_row.innerHTML += '<div class="col-12 rule shadow-sm text-center content_box_option" style="margin-top:10px;padding-top:10px;padding-bottom:10px;padding-left:5px; background-color:linen;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"> <select class="form-select" aria-label="origin" id="' + id + '_origin" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success(' + "'Trigger updated succesfully'" + ');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" id="type_' + id + '_parameter" onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success(' + "'Trigger updated succesfully'" + ');"> </select> </div> <div class="col-3 no-gutters rule"><select class="form-select" aria-label="target" id="' + id + '_destination"onchange="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ');alertify.success(' + "'Trigger updated succesfully'" + ');"> </select> </div> <div class="col-3 no-gutters rule"> <div class="row no-gutters rule text-center align-items-center"> <div class="col-12 rule"><a class="instance_delete" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom" title="" onclick="deleteInstance(22,22,' + triggers_instances[x].inner_id + ',false,false)" data-bs-original-title="Delete instance "><strong>-</strong></a></div> <div class="col-6 rule" style="display:none"> <img class="img-fluid align-right" style="max-width: 30px;" src="./res/saveButton2.svg" onclick="saveSequence(22,' + triggers_instances[x].inner_id + ',' + id + ',' + "'" + 'trigger' + "'" + ')"></img> </div> </div> </div> </div> </div>';
 
             let document_result_origin = document.getElementById(id + '_origin');
             let document_result_relationship_type = document.getElementById('type_' + id + '_parameter');
@@ -1431,7 +1465,7 @@ function sequencerRulesReasoner(array) {
                 if (selection == 'parameter') {
                     //we have to populate the destination with the available parameters
                     //lets finish by adding the parameters
-                    console.log("CURRENT PARAMETER TO USE IN THE TRIGGER: "+current_instance_variables.variables.trigger_value);
+                    console.log("CURRENT PARAMETER TO USE IN THE TRIGGER: " + current_instance_variables.variables.trigger_value);
 
                     for (let y in available_parameters) {
                         console.log("adding parameters to the trigger destination");
@@ -1456,11 +1490,11 @@ function sequencerRulesReasoner(array) {
                     console.log("adding states to the trigger destination");
                     if (current_instance_variables.variables.trigger_value != '') {
                         document_result_destination.value = current_instance_variables.variables.trigger_value;
-                    
-                    }else{
+
+                    } else {
                         document_result_destination.innerHTML = "<option value=''>None</option><option value='run'>Start</option><option value='stop'>End</option>";
                         document_result_destination.value = current_instance_variables.variables.trigger_value;
-                        
+
                     }
 
                 }
@@ -1480,7 +1514,7 @@ function sequencerRulesReasoner(array) {
                 document.getElementById('type_' + id + '_parameter').value = selection;
             }
 
-        
+
 
         }//end of the for that populates the rows
 
@@ -1532,7 +1566,7 @@ function sequencerRulesReasoner(array) {
                     destination.innerHTML = "<option value='run'>Start</option><option value='stop'>End</option>";
                     if (current_instance_variables.variables.trigger_value != '') {
                         destination.value = current_instance_variables.variables.trigger_value;
-                    }else{
+                    } else {
                         destination.innerHTML = "<option value=''>None</option><option value='run'>Start</option><option value='stop'>End</option>";
                         destination.value = current_instance_variables.variables.trigger_value;
                     }
@@ -1555,7 +1589,7 @@ function populateExternalTriggers() {
     //triggers are a bit tricky because we have to add listeners depending on the type of trigger we select
     let document_row = document.getElementById('external_triggers_container');
     //lets fetch the triggers from the selected collection (if any
-    
+
     let triggers_instances = array[findPlaceByParentName('Triggers', array)][4];
     //if it is a result we need 3 parameters: operation of origin, parameter to create and destination (if any)
     document_row.innerHTML += '<div class="col-12 rule  text-center content_box_option" style="margin-top:10px; background-color:#ffffff;"><div class="row no-gutters rule align-items-center"> <div class="col-3 no-gutters rule"><h6><strong>Source</strong></h6></div> <div class="col-3 no-gutters rule"><h6><strong>Trigger\ntype</strong></h6></div> <div class="col-3 no-gutters rule"> <h6><strong>Destination</strong></h6> </div> <div class="col-3 no-gutters rule"><h6><strong>Actions</strong></h6></div> </div> </div> </div>'
@@ -1644,7 +1678,7 @@ function populateExternalTriggers() {
             document.getElementById('type_' + id + '_parameter').value = selection;
         }
 
-    
+
 
     }//end of the for that populates the rows
 
@@ -1733,7 +1767,7 @@ function saveSequence(parent_id, instance_id, dom_id, type) {
 
             //we update the cache of the profile
             saveInstanceCache();
-            
+
 
             break;
 
@@ -1754,7 +1788,7 @@ function saveSequence(parent_id, instance_id, dom_id, type) {
 
             //we update the cache of the profile
             saveInstanceCache();
-            
+
             break;
 
         case 'result':
@@ -1813,21 +1847,21 @@ function getGuidesList() {
     return final_list_of_guides;
 }
 
-function deleteExternalTrigger(trigger_id){
+function deleteExternalTrigger(trigger_id) {
     //we access the cache and retrigger the external triggers initializer
 
     //we get the collection
-    for(let x in this.external_triggers_cache){
-        if(this.external_triggers_cache[x].element_id == trigger_id){
+    for (let x in this.external_triggers_cache) {
+        if (this.external_triggers_cache[x].element_id == trigger_id) {
             //we get the parent collection
             let parent_collection_external_triggers = this.external_triggers_cache[x].parent_collection.external_triggers;
-            for(let y in parent_collection_external_triggers){
-                if(parent_collection_external_triggers[y].element_id == trigger_id){
-                    parent_collection_external_triggers.splice(y,1);
+            for (let y in parent_collection_external_triggers) {
+                if (parent_collection_external_triggers[y].element_id == trigger_id) {
+                    parent_collection_external_triggers.splice(y, 1);
                     alertify.success("Trigger deleted successfully");
                     playSound('delete');
                     updateLocalStorage();
-                    externalTriggersPopulation(false,true);
+                    externalTriggersPopulation(false, true);
                 }
             }
         }
@@ -1835,29 +1869,297 @@ function deleteExternalTrigger(trigger_id){
 
 }
 
-function saveExternalTrigger(trigger_id){
+function saveExternalTrigger(trigger_id) {
     //we access the cache and retrigger the external triggers initializer
 
     //we get the collection
-    for(let x in this.external_triggers_cache){
-        if(this.external_triggers_cache[x].element_id == trigger_id){
+    for (let x in this.external_triggers_cache) {
+        if (this.external_triggers_cache[x].element_id == trigger_id) {
             //we get the parent collection
             let parent_collection_external_triggers = this.external_triggers_cache[x].parent_collection.external_triggers;
-            for(let y in parent_collection_external_triggers){
-                if(parent_collection_external_triggers[y].element_id == trigger_id){
-                    
+            for (let y in parent_collection_external_triggers) {
+                if (parent_collection_external_triggers[y].element_id == trigger_id) {
+
 
                     let trigger_to_update = parent_collection_external_triggers[y];
-                    trigger_to_update.target_operation = document.getElementById(trigger_to_update.element_id+'_origin').value;
-                    trigger_to_update.trigger_type = document.getElementById('type_'+trigger_to_update.element_id+'_parameter').value;
-                    trigger_to_update.trigger_value = document.getElementById(trigger_to_update.element_id+'_destination').value;
+                    trigger_to_update.target_operation = document.getElementById(trigger_to_update.element_id + '_origin').value;
+                    trigger_to_update.trigger_type = document.getElementById('type_' + trigger_to_update.element_id + '_parameter').value;
+                    trigger_to_update.trigger_value = document.getElementById(trigger_to_update.element_id + '_destination').value;
                     alertify.success('New trigger succesfully assigned!');
                     playSound('success_2');
                     updateLocalStorage();
-                    externalTriggersPopulation(false,true);
+                    externalTriggersPopulation(false, true);
                 }
             }
         }
     }
 
+}
+
+/* --------------------This section of the code is dedicated to drafting the timing diagram BEFORE rating the operations---------------------------------------
+This means that the timing diagram generated with the code below lacks a rank and background color for each step. 
+Some other useful functions are available here as well, such as getProfileOperationalPathways, which is used to get the chain of operations using the triggers 
+declared by the user.*/
+function timingDiagramDraft(root_profile) {
+
+    let profile;
+    if (root_profile == null || root_profile == '') {
+        profile = this.available_parents;
+    } else {
+        profile = root_profile;
+    }
+    let timing_diagram = '';
+    //we initialize all the operations as robust
+    let init = '\n <style>\n    timingDiagram {\n      .red {\n        LineColor red\n      }\n      .blue {\n        LineColor blue\n        LineThickness 3\n      }\n    }\n</style>\n scale 1 as 200 pixels';
+    timing_diagram += init;
+    let operations = profile[findPlaceByParentName('Operations', profile)][4];
+
+    for (let x in operations) {
+        timing_diagram += '\nrobust "' + operations[x].Name + '" as ' + operations[x].Name.split(' ').join('') + ' <' + '<' + 'blue' + '>' + '>';
+    }
+
+    timing_diagram += '\n @0';
+    for (let x in operations) {
+        timing_diagram += '\n' + operations[x].Name.split(' ').join('') + ' is Off';
+    }
+    //now that the operations are in place, we have to get the operational pathways
+    let operational_pathways = getProfileOperationalPathways(profile, [], 0);
+    //console.log("Operational pathways: " + JSON.stringify(operational_pathways));
+    //we have to add the operational pathways to the timing diagram
+    for (let x in operational_pathways) {
+        timing_diagram += operational_pathways[x].description;
+    }
+    //console.log("Timing diagram draft:\n "+timing_diagram);
+    //we parse the timing diagram to the UI
+    document.getElementById("plantuml_builder_timing").innerHTML = '';
+    document.getElementById("plantuml_builder_timing").innerHTML += `<img class="img-fluid"  uml='${timing_diagram}'>`;
+    this.timing_diagram_draft = timing_diagram;
+    plantuml_runonce();
+
+}
+
+
+
+class Step {
+    constructor() {
+        this.by_state = [];
+        this.by_operations = [];
+        this.by_parameter = [];
+        this.results_generated = [];
+        this.description = '';
+    }
+}
+
+function getProfileOperationalPathways(profile, sequencer, step) {
+
+    //console.log("%cgetOperationalPathways: PROFILE " + JSON.stringify(profile), "background-color: white;color:red;");
+    console.log("%cgetOperationalPathways: step " + step, "background-color: white;color:red;");
+    //We have to get the consumption from the operations.
+    //I have to create a new attribute for the operatins called "weight". Weight will determine
+    //how much actual consumption each one of the operations represents. Right now, I will not add
+    //this property, instead I will assign consupmtion the following way: Low: 1/3 of the consumption, Medium: 2/3 high 3/3
+    //there is still an issue as not all operations are used at the same time. Therefore, I need to find
+    //the available operational sequences using triggers, results, operations and profile states
+
+    //Priority: 1- profile state, 2- operations and results, Operations
+    //I will handle all of this by using steps.
+
+    //1- we get the operations that get triggered by the profile state
+    if (step == 0) {
+        let new_step = new Step();
+        let triggers_index = findPlaceByParentName('Triggers', profile);
+        //alert("Available triggers: "+JSON.stringify(profile[triggers_index][4]));
+        //------TRIGGERED BY STATE------
+        for (let x in profile[triggers_index][4]) {
+            if (profile[triggers_index][4][x].inner_variables[0].variables.trigger_Type == "state" && profile[triggers_index][4][x].inner_variables[0].variables.trigger_value == "run") {
+                //alert("Operation "+profile[triggers_index][4][x].inner_variables[0].variables.operation_id+" triggered by state");
+                //console.log("%cOperation triggered by run: "+profile[triggers_index][4][x].inner_variables[0].variables.operation_id,'background-color:white;color:blue;');
+                new_step.description += '\n@' + (step + 1) + '\n' + findInstanceInStorage(findPlaceByParentName('Operations', this.available_parents), profile[triggers_index][4][x].inner_variables[0].variables.operation_id).Name.split(' ').join('') + ' is On';
+                new_step.by_state.push(profile[triggers_index][4][x].inner_variables[0].variables.operation_id);
+                new_step.description += '\n@' + (step + 2) + '\n' + findInstanceInStorage(findPlaceByParentName('Operations', this.available_parents), profile[triggers_index][4][x].inner_variables[0].variables.operation_id).Name.split(' ').join('') + ' is Off';
+
+            }
+        }
+
+
+
+        //operations triggered by an operation get triggered instantly by it in the same step
+        //operations triggered by a parameter get triggered in the next step to the one where the parameter is generated
+
+        //find the operations triggered by any operation up until now
+        //----------TRIGGERED BY OPERATIONS-------
+        /*  for(let x in new_step.by_state){
+             //we match the operations that get triggered by the operation in x, using triggers of course
+             let triggers = profile[findPlaceByParentName('Triggers',profile)][4];
+             for(let y in triggers){
+                 let operation_id = triggers[y].inner_variables[0].variables.operation_id;
+                 let target_operation = triggers[y].inner_variables[0].variables.trigger_value;
+                 let trigger_type = triggers[y].inner_variables[0].variables.trigger_Type;
+     
+                 //console.log("Operation by_state: "+step.by_state[x]+" Operation id:"+operation_id+" trigger_type: "+trigger_type+" target_operation: "+target_operation );
+     
+                 if(operation_id == new_step.by_state[x] && trigger_type == 'operation'){
+                     console.log("%cOperation triggered by other operation(s): "+target_operation,'background-color:white;color:blue;' );
+                     new_step.by_operations.push(target_operation);
+                 }
+             }
+         }
+      */
+        console.log("PRE operations cascade: " + JSON.stringify(new_step));
+        getOperationsCascade(new_step.by_state, profile, new_step.by_operations);
+        console.log("POST operations cascade: " + JSON.stringify(new_step));
+        //we get the by_operations timing
+        for (let x in new_step.by_operations) {
+            console.log("Adding Operation: " + new_step.by_operations[x] + " to ON at " + (step + 1));
+            let operation_id = new_step.by_operations[x];
+            let operation_name = findInstanceInStorage(findPlaceByParentName('Operations', profile), operation_id).Name;
+            let operation_pseudonim = operation_name.split(' ').join('');
+            new_step.description += '\n' + '@' + (step + 1) + '\n' + operation_pseudonim + ' is On';
+            new_step.description += '\n' + '@' + (step + 2) + '\n' + operation_pseudonim + ' is Off';
+        }
+        console.log("New step descriptions: " + JSON.stringify(new_step.description));
+        //now that we have the operations triggered by the state and by other operations, we need to get the results they generate
+        //--------------RESULTS---------------
+        let results_index = findPlaceByParentName('Results', profile);
+        for (let x in new_step.by_state) {
+            for (let y in profile[results_index][4]) {
+                let parameter_instance = profile[results_index][4][y].inner_variables[0].variables.parameter;
+                let parameter_name = findInstanceInStorage(findPlaceByParentName('Parameters', this.available_parents), parameter_instance);
+                if (profile[results_index][4][y].inner_variables[0].variables.source_operation == new_step.by_state[x]) {
+                    //console.log("%cResult: "+parameter_instance+" created by: "+new_step.by_state[x],"background-color:white;color:blue;");
+                    new_step.results_generated.push(profile[results_index][4][y].inner_variables[0].variables.parameter);
+
+                }
+            }
+        }
+        for (let x in new_step.by_operations) {
+            for (let y in profile[results_index][4]) {
+
+                if (profile[results_index][4][y].inner_variables[0].variables.source_operation == new_step.by_operations[x]) {
+                    //console.log("%cResult: "+profile[results_index][4][y].inner_variables[0].variables.parameter+" created by: "+new_step.by_operations[x],"background-color:white;color:blue;");
+                    new_step.results_generated.push(profile[results_index][4][y].inner_variables[0].variables.parameter);
+                }
+            }
+        }
+
+        sequencer[step] = new_step;
+        step += 1;
+        getProfileOperationalPathways(profile, sequencer, step);
+
+    } else {
+        //****************** STEP>0 ****************
+
+        //we are not in step 0, we gotta set our references to step-1 in order to retrieve previous results
+        let new_step = new Step();
+
+        let previous_step = sequencer[(step - 1)];
+        let triggers_index = findPlaceByParentName('Triggers', profile);
+        //we first get the operations triggered by previous results
+
+        //------------TRIGGERED BY RESULTS----------
+
+        for (let x in previous_step.results_generated) {
+            //we match the operations that get triggered by the operation in x, using triggers of course
+            let triggers = profile[findPlaceByParentName('Triggers', profile)][4];
+            for (let y in triggers) {
+                let operation_to_trigger = triggers[y].inner_variables[0].variables.operation_id;
+                let parameter = triggers[y].inner_variables[0].variables.trigger_value;
+                let trigger_type = triggers[y].inner_variables[0].variables.trigger_Type;
+
+                //console.log("Operation by_state: "+step.by_state[x]+" Operation id:"+operation_id+" trigger_type: "+trigger_type+" target_operation: "+target_operation );
+
+                if (parameter == previous_step.results_generated[x] && trigger_type == 'parameter') {
+                    //console.log("%cOperation triggered by previous parameters: "+operation_to_trigger,'background-color:white;color:blue;' );
+                    new_step.by_parameter.push(operation_to_trigger);
+                    let operation_name = findInstanceInStorage(findPlaceByParentName('Operations', profile), operation_to_trigger).Name;
+                    let operation_pseudonim = operation_name.split(' ').join('');
+
+                    new_step.description += '\n@' + (step + 1);
+                    new_step.description += '\n' + operation_pseudonim + ' is On';
+                    new_step.description += '\n@' + (step + 2);
+                    new_step.description += '\n' + operation_pseudonim + ' is Off';
+                }
+            }
+
+        }
+
+        //--------TRIGGERED BY OPERATIONS--------
+        getOperationsCascade(new_step.by_parameter, profile, new_step.by_operations);
+        console.log("POST operations cascade in step >0: " + JSON.stringify(new_step));
+        for (let x in new_step.by_operations) {
+            let operation_name = findInstanceInStorage(findPlaceByParentName('Operations', profile), new_step.by_operations[x]).Name;
+            let operation_pseudonim = operation_name.split(' ').join('');
+            new_step.description += '\n@' + (step + 1);
+            new_step.description += '\n' + operation_pseudonim + ' is On';
+            new_step.description += '\n@' + (step + 2);
+            new_step.description += '\n' + operation_pseudonim + ' is Off';
+        }
+        //---------RESULTS---------
+        let results_index = findPlaceByParentName('Results', profile);
+        for (let x in new_step.by_parameter) {
+            for (let y in profile[results_index][4]) {
+
+                if (profile[results_index][4][y].inner_variables[0].variables.source_operation == new_step.by_parameter[x]) {
+                    //console.log("%cResult: "+profile[results_index][4][y].inner_variables[0].variables.parameter+" created by: "+new_step.by_parameter[x],"background-color:white;color:blue;");
+                    new_step.results_generated.push(profile[results_index][4][y].inner_variables[0].variables.parameter);
+                }
+            }
+        }
+        for (let x in new_step.by_operations) {
+            for (let y in profile[results_index][4]) {
+
+                if (profile[results_index][4][y].inner_variables[0].variables.source_operation == new_step.by_operations[x]) {
+                    console.log("%cResult: " + profile[results_index][4][y].inner_variables[0].variables.parameter + " created by: " + new_step.by_operations[x], "background-color:white;color:blue;");
+                    new_step.results_generated.push(profile[results_index][4][y].inner_variables[0].variables.parameter);
+                }
+            }
+        }
+
+        if (new_step.by_operations == '' && new_step.by_parameter == '') {
+            return;
+        } else {
+            sequencer[step] = new_step;
+            step += 1;
+            console.log("Avoiding recursion: " + step);
+            getProfileOperationalPathways(profile, sequencer, step);
+        }
+
+
+    }
+    return sequencer;
+}
+
+function getOperationsCascade(startOperations, profile, rootCascade) {
+
+    let cascade = [];
+    let triggers_index = profile[findPlaceByParentName('Triggers', profile)][4];
+    console.log("Operations cascade using the following triggers:\n " + JSON.stringify(triggers_index));
+    //we gotta check the operations triggered by the start operations and the subsequent operations
+    console.log("START OPERATIONS: " + startOperations);
+    for (let x in startOperations) {
+        for (let y in triggers_index) {
+            let trigger_data = triggers_index[y].inner_variables[0].variables;
+            let trigger_origin = trigger_data.operation_id;
+            let trigger_target = trigger_data.trigger_value;
+            let trigger_Type = trigger_data.trigger_Type;
+            console.log("Current operation " + startOperations[x] + " trigger: \nType: " + trigger_Type + "\nOrigin: " + trigger_origin + "\nTarget: " + trigger_target);
+            if (startOperations[x] == trigger_target && trigger_Type == 'operation') {
+                console.log("%cgetOperationsCascade: does operation " + startOperations[x] + " trigger " + trigger_target + "? ", 'background-color:white;color:red;');
+                console.log("%cYES", 'color:green');
+                rootCascade.push(trigger_origin);
+                cascade.push(trigger_origin);
+            } else {
+                console.log("%cNO", 'color:red');
+            }
+
+        }
+    }
+
+    if (cascade.length == 0) {
+        return;
+    } else {
+        //we employ recursion to find out what other operations are triggered down the pipeline
+        console.log("getOperaitionsCascade: starting recursion with: " + JSON.stringify(cascade));
+        getOperationsCascade(cascade, profile, rootCascade);
+    }
 }
