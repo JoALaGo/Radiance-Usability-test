@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         document.getElementById('tutorial_row_guide').classList.add('attention');
                         setOpacity(1, 'tutorial_row_guide');
                         alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'Congratulations you declared all the elements needed for the test. You can now proceed to the next stage by clicking on the "Rate model" button.');
-                        document.getElementById('tutorial_row_guide').innerHTML += '<div class="col-12 report_highlight_advice"><h6 style="font-size:small">The same results could be achieved with a different amount of instances. Software modelling is a creative approach with no specific answer.</h6></div>'
+                        document.getElementById('tutorial_row_guide').innerHTML += '<div class="col-12 report_highlight_advice"><h6 style="font-size:small">The same results could be achieved with a different amount of instances. Software modeling is a creative approach with no specific answer.</h6></div>'
                     }
                 }
             }
@@ -394,7 +394,7 @@ function resumeTutorial() {
             {
                 highlight: "#_0_parent_header",
 
-                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modelling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
+                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modeling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
                 position: 'right',
                 callback: {
                     fn: () => {
@@ -748,7 +748,7 @@ function loadSample() {
             {
                 highlight: "#_0_parent_header",
 
-                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modelling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
+                text: 'Model characteristics are used to describe the behavior of the model: when and how the sotfware you will be modeling is used. When you click on it, the model' + "'" + 's characteristics get displayed.',
                 position: 'right',
                 callback: {
                     fn: () => {
