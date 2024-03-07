@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             }
 
             console.log("Tutorial state: \n" + "Last tutorial step: " + this.tutorial_step + "\n" + "Introductory modal visible: " + introductory_modal_open + "\n" + "Notified the user of tutorial exit:" + this.notify_tutorial_exit_once);
-            if (this.tutorial_step < 18 && this.tutorial_step >= 9) {
+            if (this.tutorial_step < 18 && this.tutorial_step >= 0) {
                 //the user stepped out of the tutorial
                 if (this.notify_tutorial_exit_once == false && introductory_modal_open == false && tutorial_step < 19) {
                     alertify.alert('<img class="img-fluid" id="radiance_logo_top" width="50%" src="./res/logohor.png" style="min-width: 140px;">', 'You just exited the tutorial, click on the "Resume tutorial" button located in the bottom left corner if you wish to resume it.');
